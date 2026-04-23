@@ -1,0 +1,30 @@
+import type { Trend } from "@/types";
+
+// MVP stage: human-curated trend pool
+export const TREND_POOL: Trend[] = [
+  { name: "DeepSeek", description: "Open-source LLM with performance rivaling GPT-4, disrupting the AI industry", searchIntent: "Learn about DeepSeek capabilities, comparisons, how to use" },
+  { name: "ChatGPT", description: "OpenAI's flagship conversational AI, the world's most popular AI assistant", searchIntent: "How to use, tips, alternatives, pricing" },
+  { name: "AI Agent", description: "Autonomous AI agents that can complete complex tasks independently", searchIntent: "What is an AI Agent, how to build one, use cases" },
+  { name: "Claude", description: "Anthropic's AI assistant known for safety and long-context capabilities", searchIntent: "Claude features, comparisons, user experience" },
+  { name: "Midjourney", description: "AI image generation tool that creates high-quality images from text descriptions", searchIntent: "Tutorials, prompt tips, alternatives" },
+  { name: "Cursor", description: "AI-powered code editor revolutionizing the programming experience", searchIntent: "How to use Cursor, vs VSCode comparison, coding efficiency" },
+  { name: "Notion AI", description: "Notion's built-in AI assistant offering writing, summarization, and translation", searchIntent: "Notion AI features, tips, pricing" },
+  { name: "Vercel v0", description: "Vercel's AI frontend generation tool that creates UI components from descriptions", searchIntent: "How to use v0, results, frontend development" },
+  { name: "Bolt.new", description: "AI full-stack app generation platform for building web apps through conversation", searchIntent: "Bolt.new experience, capabilities and limitations" },
+  { name: "GPT-4o", description: "OpenAI's multimodal model supporting text, image, and audio input", searchIntent: "GPT-4o features, pricing, how to use" },
+  { name: "Sora", description: "OpenAI's text-to-video generation model", searchIntent: "How to use Sora, results, alternatives" },
+  { name: "Gemini", description: "Google's multimodal AI model deeply integrated with Google ecosystem", searchIntent: "Gemini features, vs GPT comparison, how to use" },
+  { name: "Llama", description: "Meta's open-source large language model series with an active community", searchIntent: "Llama deployment, fine-tuning, performance comparison" },
+  { name: "Copilot", description: "Microsoft's AI assistant integrated into Windows, Office, and other products", searchIntent: "Copilot features, use cases, pricing" },
+  { name: "RAG", description: "Retrieval-Augmented Generation technology that lets AI answer based on external knowledge", searchIntent: "RAG principles, implementation, use cases" },
+  { name: "AI Coding", description: "AI-assisted programming trends including code generation, review, and debugging", searchIntent: "AI coding tools, productivity boost, future impact" },
+  { name: "Prompt Engineering", description: "The art of crafting prompts to optimize AI output quality", searchIntent: "Prompt tips, templates, best practices" },
+  { name: "AI Automation", description: "AI-driven business process automation reducing manual operations", searchIntent: "AI automation tools, use cases, implementation" },
+  { name: "LLM Fine-tuning", description: "Fine-tuning large language models for specific domains to improve specialized capabilities", searchIntent: "Fine-tuning methods, data preparation, cost analysis" },
+  { name: "AI Writing", description: "AI-assisted content creation including articles, marketing copy, and code", searchIntent: "AI writing tools, quality, tips" },
+  { name: "Voice Cloning", description: "AI voice synthesis and cloning technology for generating realistic human speech", searchIntent: "Voice cloning tools, principles, applications" },
+  { name: "Digital Humans", description: "AI-powered virtual humans for livestreaming, customer service, and education", searchIntent: "Digital human tools, use cases, cost" },
+  { name: "AI Search", description: "AI-powered next-generation search engines that deliver direct answers", searchIntent: "AI search engine comparison, user experience" },
+  { name: "Knowledge Base", description: "AI-enhanced knowledge management systems with intelligent retrieval and Q&A", searchIntent: "AI knowledge base tools, how to build" },
+  { name: "AI Education", description: "AI applications in education including personalized learning and smart grading", searchIntent: "AI education tools, effectiveness, future trends" },
+];
