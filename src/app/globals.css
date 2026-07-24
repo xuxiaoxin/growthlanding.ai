@@ -7,6 +7,7 @@
   --color-primary: #4F46E5;
   --color-primary-hover: #4338CA;
   --color-accent: #6366F1;
+  --color-accent2: #F97316;
   --color-border: #374151;
   --color-text-primary: #FFFFFF;
   --color-text-secondary: #9CA3AF;
@@ -44,4 +45,20 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
+}
+
+/* Fade-in animation (was referenced but never defined) */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out;
 }

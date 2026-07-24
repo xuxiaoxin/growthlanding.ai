@@ -8,9 +8,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "GrowthLanding AI - Turn Trends into SEO Pages",
+  title: "GrowthRadar — Discover Rising SaaS & AI Sites",
   description:
-    "Generate high-ranking landing pages from trending topics — automatically.",
+    "A daily-updated public leaderboard of newly launched, worth-studying SaaS and AI products discovered across the web.",
 };
 
 export default function RootLayout({
@@ -20,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-background text-foreground">
+        {children}
+      </body>
     </html>
   );
 }

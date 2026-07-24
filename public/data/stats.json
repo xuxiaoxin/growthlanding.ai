@@ -1,0 +1,89 @@
+{
+  "total_domains": 55491,
+  "total_scored": 55491,
+  "total_llm_enriched": 679,
+  "alive": 52431,
+  "dead": 3060,
+  "discovered_today": 2416,
+  "discovered_7d": 24517,
+  "top_categories": [
+    {
+      "category": "developer_tool",
+      "count": 10008
+    },
+    {
+      "category": "content",
+      "count": 4610
+    },
+    {
+      "category": "education",
+      "count": 4416
+    },
+    {
+      "category": "ai_tool",
+      "count": 3506
+    },
+    {
+      "category": "saas",
+      "count": 3376
+    },
+    {
+      "category": "finance",
+      "count": 3110
+    },
+    {
+      "category": "ecommerce",
+      "count": 2900
+    },
+    {
+      "category": "healthcare",
+      "count": 2448
+    },
+    {
+      "category": "portfolio",
+      "count": 768
+    },
+    {
+      "category": "real_estate",
+      "count": 604
+    },
+    {
+      "category": "legal",
+      "count": 447
+    },
+    {
+      "category": "landing",
+      "count": 175
+    }
+  ],
+  "generated_at": "2026-07-24T15:20:31Z",
+  "detail_shards": [
+    "0",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z"
+  ]
+}
