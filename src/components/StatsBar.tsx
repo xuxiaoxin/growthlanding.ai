@@ -12,10 +12,10 @@ interface Props {
 
 export default function StatsBar({ stats }: Props) {
   const items = [
-    { label: "Discovered today", value: stats?.discovered_today },
-    { label: "Last 7 days", value: stats?.discovered_7d },
-    { label: "Total tracked", value: stats?.total_domains },
-    { label: "LLM analyzed", value: stats?.total_llm_enriched },
+    { label: "Curated sites", value: stats?.total_featured },
+    { label: "Discovered 7d", value: stats?.discovered_7d },
+    { label: "Total scored", value: stats?.total_scored },
+    { label: "Alive", value: stats?.alive },
   ];
 
   return (
@@ -37,8 +37,7 @@ export default function StatsBar({ stats }: Props) {
       </div>
       {stats?.generated_at && (
         <p className="text-[11px] text-text-muted mt-3 text-center">
-          Data updated {relativeTime(stats.generated_at)} · alive{" "}
-          {compactNum(stats.alive)} / dead {compactNum(stats.dead)}
+          Data updated {relativeTime(stats.generated_at)}
         </p>
       )}
     </section>

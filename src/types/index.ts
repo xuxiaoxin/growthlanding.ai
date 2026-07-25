@@ -1,94 +1,59 @@
 /**
- * Data contracts for GrowthRadar.
+ * Data contracts for GrowthRadar (featured-only, desensitized public site).
  *
  * These mirror the JSON produced by analyzers/scripts/export-webui.py.
- * Three-state semantics: every boolean signal is `true | false | null` where
- * `null` means "not measured / fetch failed" (distinct from `false`).
+ * The site is curated to FEATURED domains only (those with LLM analysis).
+ *
+ * Desensitization: internal detection signals (dns_richness, page_count,
+ * payment_sdk, score breakdown, etc.) are intentionally NOT exported -- only
+ * the score number, the LLM analysis, and publicly-observable status survive.
  */
 
-/** A single leaderboard-card item (featured.json / all.json `items[]`). */
+/** A single leaderboard-card item (featured.json `items[]`). */
 export interface DomainItem {
   domain: string;
   first_seen: string | null; // ISO-8601 UTC
-  score: number | null; // 0.0 - 1.0
+  score: number | null; // 0.0 - 1.0 (bare number, no breakdown)
   category: string | null; // LLM category if present, else Stage 0 guess
   subcategory: string | null;
-  summary: string | null; // <=20 word LLM description (featured only)
-  replication_difficulty: "low" | "medium" | "high" | null;
-  competition_level: "low" | "medium" | "high" | null;
-  llm_confidence: number | null;
+  summary: string | null; // <=30 word LLM one-liner
   business_model: string | null;
   survival_status: "alive" | "dead" | null;
-  has_pricing_page: boolean | null;
-  has_payment_sdk: boolean | null;
-  payment_provider: string | null;
-  has_adsense: boolean | null;
-  detected_lang: string | null;
-  page_count: number | null;
-  dns_richness: number | null;
+  replication_difficulty: "low" | "medium" | "high" | null;
+  competition_level: "low" | "medium" | "high" | null;
 }
 
-/** Full detail-page item (detail/<key>.json `domains[domain]`). */
+/** Full detail-page item (featured-details.json `domains[domain]`). */
 export interface DomainDetail extends DomainItem {
+  description: string | null; // 100-150 word LLM product description
+  key_features: string[]; // 3-5 core feature bullets
+  target_users: string | null; // who it's built for
+  why_interesting: string | null; // why worth studying
   unique_data_dependency: boolean | null;
+  llm_confidence: number | null;
   llm_model: string | null;
-  score_breakdown: ScoreBreakdown | null;
-  score_version: string | null;
-  has_upgrade_cta: boolean | null;
-  checkout_detected: boolean | null;
-  internal_links: number | null;
-  sitemap_url_count: number | null;
-  tranco_in_top_1m: boolean | null;
-  crux_in_corpus: boolean | null;
-  has_public_analytics: boolean | null;
-  public_analytics_provider: string | null;
-  alive_30d: boolean | null;
-  alive_90d: boolean | null;
-  alive_180d: boolean | null;
-  monetized_at_90d: boolean | null;
-  launched_between_t0_t14: boolean | null;
-  monetization_appeared: boolean | null;
-  cohort_tag: string | null;
-  safety_flag: string | null;
-  pipeline_stage: string | null;
-}
-
-/** Per-component opportunity-score contribution (details.opportunity_score_breakdown). */
-export interface ScoreBreakdown {
-  dns_richness: number;
-  pricing_page: number;
-  saas_model: number;
-  ai_category: number;
-  page_scale: number;
-  payment_filtered: number;
-  checkout: number;
-  survival_alive: number;
-  _total: number;
-  _version: string;
 }
 
 /** Aggregate headline numbers (stats.json). */
 export interface Stats {
   generated_at: string;
-  total_domains: number;
+  total_featured: number;
   total_scored: number;
-  total_llm_enriched: number;
   alive: number;
   dead: number;
   discovered_today: number;
   discovered_7d: number;
   top_categories: { category: string; count: number }[];
-  detail_shards?: string[];
 }
 
-/** Envelope for the featured/all list files. */
+/** Envelope for the featured list. */
 export interface ListEnvelope {
   generated_at: string;
   total: number;
   items: DomainItem[];
 }
 
-/** Envelope for a detail shard. */
+/** Envelope for featured-details.json. */
 export interface DetailEnvelope {
   generated_at: string;
   total: number;

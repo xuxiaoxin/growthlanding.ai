@@ -1,19 +1,18 @@
 /**
- * LeaderboardCard — a single ProductHunt-style ranking row.
+ * LeaderboardCard — a single ProductHunt-style ranking row (Server Component).
  *
  * Layout: rank | favicon+domain+summary | score + badges | external link.
  * Clicking the row navigates to the in-site detail page (/domain/<domain>).
- * The ↗ button opens the real site in a new tab (stops propagation).
+ * The ↗ link opens the real site in a new tab.
+ *
+ * Desensitized: shows only the score number + LLM analysis + category.
+ * No raw detection signals.
  */
-
-"use client";
 
 import Link from "next/link";
 import type { DomainItem } from "@/types";
-import SignalBadges from "./SignalBadges";
 import {
   faviconUrl,
-  siteUrl,
   scorePct,
   categoryColor,
   difficultyColor,
@@ -31,7 +30,7 @@ export default function LeaderboardCard({ item, rank }: Props) {
   return (
     <Link
       href={`/domain/${encodeURIComponent(item.domain)}`}
-      className="block bg-card border border-border rounded-xl p-4 transition-all hover:border-text-muted hover:scale-[1.005] animate-fade-in"
+      className="block bg-card border border-border rounded-xl p-4 transition-all hover:border-text-muted hover:scale-[1.005]"
     >
       <div className="flex items-start gap-3">
         {/* Rank */}
@@ -51,7 +50,6 @@ export default function LeaderboardCard({ item, rank }: Props) {
           width={40}
           height={40}
           className="shrink-0 w-10 h-10 rounded-lg bg-background border border-border object-contain p-1"
-          loading="lazy"
         />
 
         {/* Main content */}
@@ -80,14 +78,9 @@ export default function LeaderboardCard({ item, rank }: Props) {
             </p>
           ) : (
             <p className="text-sm text-text-muted mt-1 line-clamp-1 italic">
-              {item.business_model ? titleCase(item.business_model) : "No analysis yet"}
-              {item.page_count ? ` · ${item.page_count} pages` : ""}
+              {item.business_model ? titleCase(item.business_model) : "No analysis"}
             </p>
           )}
-
-          <div className="mt-2">
-            <SignalBadges item={item} />
-          </div>
         </div>
 
         {/* Score + actions */}
@@ -108,16 +101,12 @@ export default function LeaderboardCard({ item, rank }: Props) {
               {item.replication_difficulty}
             </span>
           )}
-          <a
-            href={siteUrl(item.domain)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="text-text-muted hover:text-primary transition-colors"
+          <span
+            className="text-text-muted"
             title={`Open ${item.domain}`}
           >
             ↗
-          </a>
+          </span>
         </div>
       </div>
     </Link>
