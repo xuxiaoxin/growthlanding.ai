@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #0B0F14;
-  --color-foreground: #FFFFFF;
-  --color-card: #111827;
-  --color-primary: #4F46E5;
-  --color-primary-hover: #4338CA;
-  --color-accent: #6366F1;
-  --color-accent2: #F97316;
-  --color-border: #374151;
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #9CA3AF;
-  --color-text-muted: #6B7280;
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
+  --color-background: #fafaf9; /* stone-50 — warm off-white, editorial */
+  --color-foreground: #18181b; /* zinc-900 */
+  --color-card: #ffffff; /* white card floating on off-white */
+  --color-primary: #18181b; /* ink — buttons, links */
+  --color-primary-hover: #27272a; /* zinc-800 */
+  --color-border: #e7e5e4; /* stone-200 hairline */
+  --color-border-strong: #d6d3d1; /* stone-300 hover state */
+  --color-text-primary: #18181b; /* zinc-900 */
+  --color-text-secondary: #52525b; /* zinc-600 */
+  --color-text-muted: #71717a; /* zinc-500 — WCAG-AA safe (~4.6:1 on white) */
+
+  /* Single brand accent — teal, used sparingly (Top3 / score rings / focus). */
+  --color-accent: #0d9488; /* teal-600 */
+  --color-accent-soft: #ccfbf1; /* teal-100 — eyebrow / focus glow */
+  --color-accent-ink: #0f766e; /* teal-700 — readable accent text */
+
+  /* Freshness accent — amber, reserved for the "NEW" pill so it reads as a
+     distinct signal from the teal brand accent (avoids teal overload on
+     Top3 + NEW cards). */
+  --color-fresh: #d97706; /* amber-600 */
+  --color-fresh-soft: #fef3c7; /* amber-100 */
+
+  /* Status colors — used only for the difficulty/competition dot.
+     Same-hue teal ramp (NOT a red/yellow/green traffic light), so the dot
+     expresses signal strength without implying "bad/good". This stays
+     consistent with the score ring's "magnitude, not verdict" philosophy. */
+  --color-success: #0d9488; /* teal-600 — reserved token, kept for compat */
+  --color-level-low: #a1a1aa; /* zinc-400 — weak signal */
+  --color-level-medium: #0d9488; /* teal-600 */
+  --color-level-high: #0f766e; /* teal-700 — strong signal */
+  /* Legacy aliases (no longer traffic-light). Kept so existing imports don't
+     break; difficultyDotColor now maps to the level-* tokens instead. */
+  --color-warning: var(--color-level-medium);
+  --color-error: var(--color-level-high);
+
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -29,29 +50,30 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Scrollbar styling */
+/* Scrollbar styling — light, thin */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-card);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 3px;
+  background: var(--color-border-strong);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
 }
 
-/* Fade-in animation (was referenced but never defined) */
+/* Staggered fade-in for leaderboard cards (per-card delay set inline). */
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(7px);
   }
   to {
     opacity: 1;
@@ -60,5 +82,62 @@ body {
 }
 
 .animate-fade-in {
-  animation: fade-in 0.25s ease-out;
+  animation: fade-in 0.42s ease both;
+}
+
+/* Pulsing dot for the "Updated" eyebrow. */
+@keyframes pulse-dot {
+  0% {
+    box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(13, 148, 136, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2.4s infinite;
+}
+
+/* Focus-visible ring for keyboard users — applies to links, buttons, inputs.
+   Uses the accent color with a soft halo; never shown for mouse clicks. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Vestibular safety: honor the OS "reduce motion" preference. Disables all
+   entrance/pulse animations so the site is safe for users with motion
+   sensitivity. (WCAG 2.3.3 Animation from Interactions.) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Skip link — visible only when focused (keyboard a11y). */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 50;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  padding: 0.5rem 0.875rem;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: 1rem;
 }

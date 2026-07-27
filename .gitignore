@@ -36,3 +36,6 @@ next-env.d.ts
 
 # claude
 .claude/
+
+# agent tooling state (not project code)
+.workbuddy/

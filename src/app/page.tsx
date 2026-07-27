@@ -1,44 +1,89 @@
 /**
  * Home = the featured leaderboard. Server Component: data is read at build
  * time via lib/data-server and baked into static HTML (SEO-friendly, instant).
+ *
+ * SEO structure:
+ *  - <h1> lives here (the hero), carrying the core keywords.
+ *  - ItemList JSON-LD is injected at the end so every detail page is also
+ *    described as a list item to search engines (rich-result eligible).
  */
 
 import Header from "@/components/Header";
 import StatsBar from "@/components/StatsBar";
-import LeaderboardCard from "@/components/LeaderboardCard";
+import Leaderboard from "@/components/Leaderboard";
 import { getFeatured, getStats } from "@/lib/data-server";
+import { relativeTime } from "@/lib/format";
+
+const SITE_ORIGIN = "https://growthlanding.ai";
 
 export default async function HomePage() {
   const [featured, stats] = await Promise.all([getFeatured(), getStats()]);
 
+  // ItemList structured data — describes the whole leaderboard to crawlers.
+  // (Kept to the full list so it matches the in-HTML internal links.)
+  const itemListLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "GrowthRadar — Top SaaS & AI opportunities",
+    numberOfItems: featured.total,
+    itemListElement: featured.items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `${SITE_ORIGIN}/domain/${encodeURIComponent(it.domain)}`,
+      name: it.domain,
+    })),
+  };
+
   return (
     <>
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
       <Header />
-      <main className="flex-1 pb-16">
-        <StatsBar stats={stats} />
+      <main id="main" className="flex-1 pb-16">
+        {/* Hero — carries the H1 + core keywords (fixes "no H1 on home"). */}
+        <section className="mx-auto max-w-5xl px-4 pt-14">
+          {stats?.generated_at && (
+            <span className="inline-flex items-center gap-2 text-xs font-semibold text-accent-ink bg-accent-soft px-3 py-[5px] rounded-full">
+              <span className="w-[7px] h-[7px] rounded-full bg-accent animate-pulse-dot" />
+              Updated {relativeTime(stats.generated_at)} ·{" "}
+              {featured.total.toLocaleString()} curated
+            </span>
+          )}
+          <h1 className="text-[34px] sm:text-[38px] leading-[1.12] tracking-[-0.035em] font-extrabold text-text-primary mt-[18px] max-w-[18ch]">
+            The radar for rising{" "}
+            <em className="not-italic text-accent-ink">SaaS &amp; AI</em>{" "}
+            products.
+          </h1>
+          <p className="text-text-secondary text-[15.5px] max-w-[580px] mt-3">
+            A daily-updated leaderboard of newly launched, worth-studying
+            products — ranked by opportunity score and enriched with AI
+            analysis.
+          </p>
 
-        <div className="mx-auto max-w-5xl px-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-text-primary">
-              🌟 Top Opportunities
+          <div className="mt-[34px]">
+            <StatsBar stats={stats} />
+          </div>
+        </section>
+
+        {/* Leaderboard */}
+        <section className="mx-auto max-w-5xl px-4 mt-11">
+          <div className="flex items-baseline justify-between gap-3 flex-wrap mb-3">
+            <h2 className="text-xl font-bold tracking-tight text-text-primary">
+              Top opportunities
             </h2>
-            <span className="text-xs text-text-muted">
-              {featured.total.toLocaleString()} curated sites, ranked by opportunity
+            <span className="text-[12.5px] text-text-muted">
+              {featured.total.toLocaleString()} curated sites, ranked by
+              opportunity
             </span>
           </div>
 
           {featured.items.length === 0 ? (
-            <p className="text-text-muted text-center py-20">
-              No domains yet.
-            </p>
+            <p className="text-text-muted text-center py-20">No domains yet.</p>
           ) : (
-            <div className="space-y-3">
-              {featured.items.map((item, i) => (
-                <LeaderboardCard key={item.domain} item={item} rank={i + 1} />
-              ))}
-            </div>
+            <Leaderboard items={featured.items} total={featured.total} />
           )}
-        </div>
+        </section>
       </main>
       <footer className="border-t border-border py-6">
         <div className="mx-auto max-w-5xl px-4 text-center text-xs text-text-muted">
@@ -53,6 +98,12 @@ export default async function HomePage() {
           </p>
         </div>
       </footer>
+
+      {/* ItemList structured data for the leaderboard. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }}
+      />
     </>
   );
 }
