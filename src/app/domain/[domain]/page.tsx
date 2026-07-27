@@ -148,7 +148,7 @@ function DetailBody({
   };
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-8">
       <Link
         href="/"
         className="inline-flex items-center gap-1 text-sm text-text-secondary hover:text-primary transition-colors mb-6"
@@ -261,7 +261,9 @@ function DetailBody({
       {/* Description */}
       {detail.description && (
         <Section title="What it does">
-          <p className="text-text-secondary leading-relaxed">{detail.description}</p>
+          <p className="text-text-secondary leading-relaxed max-w-3xl">
+            {detail.description}
+          </p>
         </Section>
       )}
 
