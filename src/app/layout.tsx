@@ -50,6 +50,11 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
+  verification: {
+    // Bing Webmaster verification. Key has a dot, so it must be quoted and go
+    // through `other` (renders as <meta name="msvalidate.01" content="...">).
+    other: { "msvalidate.01": "61FBBC107CB385A779AD4900D5809F96" },
+  },
 };
 
 export default function RootLayout({
