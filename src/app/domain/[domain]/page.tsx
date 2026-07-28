@@ -314,7 +314,7 @@ function DetailBody({
       </Section>
 
       <p className="text-[11px] text-text-muted mt-8 text-center">
-        Analysis is automated (LLM-assisted) and heuristic, not an endorsement.
+        For informational purposes only. Not an endorsement.
       </p>
 
       {/* Structured data */}

@@ -212,11 +212,11 @@ export default function PrivacyPage() {
               practical exercise of rights like access or deletion is simple:
               there is nothing to access or delete. If you believe otherwise —
               for example, if a listed domain is yours and you have a concern —
-              email{" "}
-              <a href="mailto:hello@growthlanding.ai">hello@growthlanding.ai</a>{" "}
-              and we will respond promptly. Depending on where you live, you
-              may also have rights under GDPR (EU/UK), CCPA (California), or
-              similar laws; we will honor valid requests.
+              you can reach out through the project&apos;s public channel (the
+              repository or project page linked from the Site) and we will
+              respond promptly. Depending on where you live, you may also have
+              rights under GDPR (EU/UK), CCPA (California), or similar laws; we
+              will honor valid requests.
             </p>
 
             <h2>7. External links</h2>
@@ -232,13 +232,6 @@ export default function PrivacyPage() {
               updated&quot; date at the top will always reflect the most recent
               version. Material changes (such as introducing analytics or
               advertising) will be called out clearly.
-            </p>
-
-            <h2>9. Contact</h2>
-            <p>
-              Questions about this Policy? Email{" "}
-              <a href="mailto:hello@growthlanding.ai">hello@growthlanding.ai</a>{" "}
-              or use the <Link href="/contact">Contact page</Link>.
             </p>
           </article>
         </div>

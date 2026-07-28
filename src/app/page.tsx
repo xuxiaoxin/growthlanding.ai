@@ -95,7 +95,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-5xl px-4 text-center text-xs text-text-muted">
           <p>
             GrowthRadar surfaces newly launched, worth-studying SaaS &amp; AI
-            products. Rankings are automated and heuristic — not endorsements.
+            products. Rankings are for discovery only — not endorsements.
           </p>
           <p className="mt-1">
             Data refreshed daily from the{" "}
@@ -134,9 +134,6 @@ export default async function HomePage() {
             </Link>
             <Link href="/terms" className="hover:text-accent-ink transition-colors">
               Terms
-            </Link>
-            <Link href="/contact" className="hover:text-accent-ink transition-colors">
-              Contact
             </Link>
           </nav>
         </div>

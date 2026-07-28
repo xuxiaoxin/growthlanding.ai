@@ -27,9 +27,6 @@ export default function PageFooter() {
           <Link href="/terms" className="hover:text-accent-ink transition-colors">
             Terms
           </Link>
-          <Link href="/contact" className="hover:text-accent-ink transition-colors">
-            Contact
-          </Link>
         </nav>
         <p>© {year} GrowthRadar</p>
       </div>

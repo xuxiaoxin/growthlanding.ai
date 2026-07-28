@@ -62,12 +62,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.3,
     },
-    {
-      url: `${BASE}/contact`,
-      lastModified: homeLastMod,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
     ...featured.items.map((it) => ({
       url: `${BASE}/domain/${encodeURIComponent(it.domain)}`,
       lastModified: it.first_seen ? new Date(it.first_seen) : now,

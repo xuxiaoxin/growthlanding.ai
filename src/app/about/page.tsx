@@ -1,10 +1,10 @@
 /**
  * About page (Server Component, static).
  *
- * The E-E-A-T cornerstone: explains what the site is, where data comes from
- * (public Certificate Transparency logs — a legitimate, public data source),
- * how the analysis is produced, and who runs it. Google Quality Raters look
- * for this page specifically when judging a directory/aggregator site.
+ * The E-E-A-T cornerstone: explains what the site is and its editorial
+ * stance at a high level. Deliberately vague about data sources and methods —
+ * the point is to signal legitimacy and intent to readers and Quality Raters,
+ * not to document the pipeline.
  *
  * SEO: canonical + meta description + BreadcrumbList JSON-LD.
  */
@@ -17,13 +17,13 @@ import PageFooter from "@/components/PageFooter";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "GrowthRadar is a curated directory of newly launched SaaS and AI products, discovered from public Certificate Transparency logs and enriched with AI-generated analysis. Learn how it works.",
+    "GrowthRadar is a curated directory of newly launched SaaS and AI products, ranked by opportunity score. Learn what it is and how to read the rankings.",
   alternates: { canonical: "/about" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "About GrowthRadar",
     description:
-      "A curated directory of newly launched SaaS and AI products, discovered from public data and enriched with AI analysis.",
+      "A curated directory of newly launched SaaS and AI products, ranked by opportunity score.",
     url: "/about",
     siteName: "GrowthRadar",
     images: [{ url: "/og.png", width: 1200, height: 630 }],
@@ -67,53 +67,25 @@ export default function AboutPage() {
             <h2>What this is</h2>
             <p>
               GrowthRadar is a free, public directory of newly launched SaaS
-              and AI products. Every entry is a real website that was recently
-              detected, automatically analyzed, and ranked by an opportunity
-              score. The goal is simple: help founders, makers, and researchers
-              spot interesting new products early — and study what makes them
-              worth watching.
+              and AI products. Every entry is a real website that recently came
+              online, now ranked by an opportunity score. The goal is simple:
+              help founders, makers, and researchers spot interesting new
+              products early — and study what makes them worth watching.
             </p>
 
-            <h2>How we discover products</h2>
+            <h2>How to read the rankings</h2>
             <p>
-              Discovery is fully automated and uses only{" "}
-              <strong>public data sources</strong>. The primary input is the{" "}
-              <a
-                href="https://certificate.transparency.dev/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Certificate Transparency (CT) log ecosystem
-              </a>{" "}
-              — a public, append-only record of TLS certificates issued for
-              domains worldwide. CT logs were built for security auditing and
-              are openly queryable by anyone; we monitor them in real time to
-              catch newly-registered or newly-secured domains.
+              The leaderboard is ordered by an opportunity score. A higher
+              score means a product looks more worth studying — not that it is
+              &quot;better&quot; or more likely to succeed. Treat the ranking as a
+              discovery tool: a starting point for your own research, not a
+              verdict.
             </p>
             <p>
-              Each new domain is then screened with a lightweight pipeline: DNS
-              resolution, an HTTP probe, and a set of heuristics that filter out
-              parked pages, spam, and noise. Only domains that survive this gate
-              move on to analysis.
-            </p>
-
-            <h2>How the analysis is produced</h2>
-            <p>
-              For each promising domain, a large language model reads the site&apos;s
-              public landing page and produces a structured analysis: what the
-              product does, its core features, who it targets, and why it might
-              be interesting. The model also classifies the domain into a
-              category (AI tool, SaaS, healthcare, etc.) and tags it with a
-              subcategory.
-            </p>
-            <p>
-              The opportunity score is a <strong>heuristic</strong> — a weighted
-              combination of publicly observable signals (such as how complete
-              the site appears, how recently it launched, and category
-              saturation). It is a starting point for your own research,{" "}
-              <strong>not an endorsement or a prediction of success</strong>.
-              See our <Link href="/terms">Terms of Service</Link> for the full
-              disclaimer.
+              Each product is tagged with a category, a short summary, and a
+              few signals (such as how saturated its space looks). These are
+              meant to help you skim and filter — they are approximate and may
+              change over time.
             </p>
 
             <h2>What GrowthRadar is not</h2>
@@ -129,16 +101,20 @@ export default function AboutPage() {
               <li>
                 Not affiliated with, or endorsed by, any of the products listed.
               </li>
+              <li>
+                Not exhaustive. The directory is a curated selection, not a
+                complete index of the web.
+              </li>
             </ul>
 
             <h2>Who runs this</h2>
             <p>
-              GrowthRadar is an independent project run by a single developer.
-              It has no investors, no sponsorships, and (for now) no
-              advertising. If you have questions, corrections, or want a domain
-              removed from the directory, you can reach me directly at{" "}
-              <a href="mailto:hello@growthlanding.ai">hello@growthlanding.ai</a>{" "}
-              — see the <Link href="/contact">Contact page</Link> for details.
+              GrowthRadar is an independent project. It has no investors, no
+              sponsorships, and (for now) no advertising. It is maintained in
+              good faith as a free resource. See our{" "}
+              <Link href="/terms">Terms of Service</Link> and{" "}
+              <Link href="/privacy">Privacy Policy</Link> for the details that
+              matter.
             </p>
           </article>
         </div>

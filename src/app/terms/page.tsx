@@ -1,10 +1,10 @@
 /**
  * Terms of Service (Server Component, static).
  *
- * Tailored to a directory/aggregator site whose content is AI-assisted and
- * whose pages link out to third-party products. The load-bearing clauses are
- * the "not professional advice" and "third-party links" disclaimers — these
- * limit liability for content that is, by design, heuristic and automated.
+ * Tailored to a directory/aggregator site whose pages link out to third-party
+ * products. The load-bearing clauses are the "informational only / not
+ * professional advice" and "third-party links" disclaimers — these limit
+ * liability for content that is, by design, approximate.
  *
  * SEO: canonical + meta description + BreadcrumbList JSON-LD.
  */
@@ -17,13 +17,13 @@ import PageFooter from "@/components/PageFooter";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "GrowthRadar's terms of service: all content is AI-assisted, automated analysis provided 'as is' for informational purposes only, and is not professional, investment, or business advice.",
+    "GrowthRadar's terms of service: content is provided 'as is' for informational purposes only, and is not professional, investment, or business advice.",
   alternates: { canonical: "/terms" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "Terms of Service — GrowthRadar",
     description:
-      "Content is automated, AI-assisted analysis for information only. Full terms and disclaimers.",
+      "Content is for information only. Full terms and disclaimers.",
     url: "/terms",
     siteName: "GrowthRadar",
     images: [{ url: "/og.png", width: 1200, height: 630 }],
@@ -75,11 +75,11 @@ export default function TermsPage() {
             <h2>1. The Site and its content</h2>
             <p>
               GrowthRadar is a free, informational directory of third-party SaaS
-              and AI products. All analysis, descriptions, categories, scores,
-              and labels shown on the Site are produced{" "}
-              <strong>automatically</strong> using public data and large language
-              models (AI). Nothing on the Site is manually reviewed or verified
-              before publication.
+              and AI products. The descriptions, categories, scores, and labels
+              shown on the Site are <strong>approximate</strong>, may be out of
+              date, and are not manually reviewed or verified before
+              publication. The Site is a discovery aid, not an authoritative
+              reference.
             </p>
 
             <h2>2. No professional advice</h2>
@@ -103,11 +103,11 @@ export default function TermsPage() {
             <p>
               The &quot;opportunity score&quot; and other signals (such as replication
               difficulty, competition level, and survival status) are{" "}
-              <strong>heuristics</strong> derived from publicly observable
-              signals. They are inherently approximate, may be out of date, and
-              may be wrong. Product features, pricing, and availability change
-              frequently and may not be reflected here. We do not warrant that
-              any information on the Site is accurate, complete, or current.
+              <strong>approximate indicators</strong>, not measurements of fact.
+              They may be out of date or simply wrong. Product features, pricing,
+              and availability change frequently and may not be reflected here.
+              We do not warrant that any information on the Site is accurate,
+              complete, or current.
             </p>
 
             <h2>4. Third-party products and links</h2>
@@ -131,13 +131,12 @@ export default function TermsPage() {
             <h2>5. Removing your domain</h2>
             <p>
               If a domain you own appears on the Site and you would like it
-              removed, email{" "}
-              <a href="mailto:hello@growthlanding.ai">hello@growthlanding.ai</a>{" "}
-              from an address associated with the domain. We will process
-              reasonable takedown requests, typically within a few business
-              days. Removal from the Site does not affect the public
-              Certificate Transparency records the listing was based on, which
-              are outside our control.
+              removed, you may request a takedown through the public channel
+              associated with this project (for example, via the repository or
+              project page linked from the Site). We will process reasonable
+              requests, typically within a few business days. Removal from the
+              Site does not affect the underlying public records the listing
+              was derived from, which are outside our control.
             </p>
 
             <h2>6. Intellectual property</h2>
@@ -177,13 +176,6 @@ export default function TermsPage() {
               updated&quot; date above reflects the current version. Continued use
               of the Site after changes take effect constitutes acceptance of
               the revised Terms.
-            </p>
-
-            <h2>10. Contact</h2>
-            <p>
-              Questions about these Terms? Email{" "}
-              <a href="mailto:hello@growthlanding.ai">hello@growthlanding.ai</a>{" "}
-              or visit the <Link href="/contact">Contact page</Link>.
             </p>
           </article>
         </div>

@@ -67,13 +67,13 @@ export function categoryH1(cat: string): string {
  */
 export function categoryIntro(cat: string, count: number, dateStr: string): string {
   const plural = categoryPlural(cat).toLowerCase();
-  return `Discover ${count.toLocaleString()} newly launched ${plural} worth studying — ranked by opportunity score and enriched with AI-generated analysis of features, target users, and replication difficulty. Each entry is a real, recently detected product. Updated ${dateStr}.`;
+  return `Discover ${count.toLocaleString()} newly launched ${plural} worth studying — ranked by opportunity score, with a short summary and key signals for each. Updated ${dateStr}.`;
 }
 
 /**
  * Meta description (~150 chars). Concise version of the intro for SERP snippets.
  */
 export function categoryMetaDesc(cat: string, count: number): string {
-  const plural = categoryPlural(cat);
-  return `A curated list of ${count.toLocaleString()} newly launched ${plural.toLowerCase()}, ranked by opportunity score with AI analysis of features and competitors.`;
+  const plural = categoryPlural(cat).toLowerCase();
+  return `A curated list of ${count.toLocaleString()} newly launched ${plural.toLowerCase()}, ranked by opportunity score with summaries and key signals.`;
 }

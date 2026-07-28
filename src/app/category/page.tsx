@@ -94,7 +94,7 @@ export default async function CategoryIndexPage() {
           <p className="text-text-secondary text-[15.5px] max-w-[580px] mt-3">
             {cats.length.toLocaleString()} categories covering{" "}
             {totalDomains.toLocaleString()} curated products — ranked by
-            opportunity score and enriched with AI analysis.
+            opportunity score.
           </p>
 
           {/* Category card grid */}

@@ -13,7 +13,7 @@ const SITE_ORIGIN = "https://growthlanding.ai";
 const SITE_NAME = "GrowthRadar";
 const DEFAULT_TITLE = "GrowthRadar — AI & SaaS Product Directory";
 const DEFAULT_DESCRIPTION =
-  "A daily-updated leaderboard of newly launched, worth-studying SaaS and AI products discovered across the web — ranked by opportunity score and enriched with AI analysis.";
+  "A daily-updated leaderboard of newly launched, worth-studying SaaS and AI products discovered across the web — ranked by opportunity score.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
