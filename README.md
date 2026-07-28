@@ -6,13 +6,16 @@ opportunities surfaced by the `monitors` + `analyzers` pipeline.
 
 ## What it is
 
-A **curated, featured-only** static site. The home page lists ~700+ hand-
-picked domains ranked by an opportunity score; each has a detail page with an
-LLM-generated function analysis (what it does, core features, who it's for,
-why it's worth studying).
+A **curated, featured-only** static site. The home page lists ~775 hand-picked
+domains ranked by an opportunity score; each has a detail page with an
+analysis of what it does, core features, who it's for, and why it's worth
+studying.
 
 - **Home** — ranked cards of all featured domains (score, category, summary).
-- **Detail pages** (`/domain/<domain>`) — full function analysis for each.
+- **Category index** (`/category`) + 13 category pages (`/category/<cat>`) —
+  browse by category (ai_tool, saas, marketing, …).
+- **Detail pages** (`/domain/<domain>`) — full analysis for each.
+- **Trust pages** — `/about`, `/privacy`, `/terms`.
 
 ## Tech stack
 
@@ -25,12 +28,27 @@ fetching, no database, no API at runtime. Data is read from `public/data/`
 via Node `fs` during `next build` (see `src/lib/data-server.ts`) and baked
 into static HTML.
 
-- `/` — prerendered with all featured cards.
-- `/domain/[domain]` — one static HTML per featured domain (775 pages),
+Routes (~799 static pages in total):
+
+- `/` — home, prerendered with all featured cards.
+- `/category` — category index (gateway to the 13 categories).
+- `/category/[cat]` — one page per category (13 pages), also
+  `generateStaticParams` + `dynamicParams = false`.
+- `/domain/[domain]` — one static HTML per featured domain (~775 pages),
   via `generateStaticParams` + `dynamicParams = false` (non-featured → 404).
+- `/about`, `/privacy`, `/terms` — 3 trust/legal pages.
 
 This makes pages **instant** (CDN-served) and **SEO-friendly** (full content
 in initial HTML, independent `<title>` per page).
+
+## SEO surface
+
+Built on `sitemap.ts` + `robots.ts` + per-page `canonical`/`metadataBase`, with
+JSON-LD on every page type (`ItemList` on home/category, `SoftwareApplication`
++ `BreadcrumbList` on detail pages) and a 4-layer internal-link graph
+(Home → `/category` → `/category/[cat]` → `/domain/[domain]`). Thin content
+(no description + not alive) is auto-marked `noindex,follow`. See `CLAUDE.md`
+for the full breakdown.
 
 ## Data source (desensitized, public)
 
@@ -65,12 +83,26 @@ into `public/data/` and commit.
 
 ## Data refresh
 
-Currently manual: run the export on bishenai2, rsync to `public/data/`,
-commit, and push. The push to the public repo triggers a Vercel rebuild.
-(Automation via cron is planned.)
+Currently **manual**, assisted by `/tmp/wait-llm-and-export.sh` on bishenai2.
+The script polls (every 5 min, over SSH) for the `llm-enrich` process to
+finish, then automatically runs the export → rsync into `public/data/` →
+`npm run build` → dual-push. The push to the public repo triggers a Vercel
+rebuild. Formal cron automation (so the wait is unattended) is **not yet
+configured**.
 
 ## Git remotes
 
 `origin` pushes to **two** repositories simultaneously (dual push):
 - `growthlanding-ai/webui` (private, fetch source)
 - `xuxiaoxin/growthlanding.ai` (public, for Vercel free-tier deployment)
+
+## Roadmap
+
+- **Dark mode** (P2, pending product decision) — Tailwind v4
+  `prefers-color-scheme` + a second token set.
+- **Favicon self-hosted proxy/cache** — replace the Google third-party favicon
+  domain (also fixes the letter fallback + latency in one go).
+- **Home "Discovered 7d" mini-trend** — show a sparkline / delta (e.g.
+  `↑ 23.5K`) alongside the stat.
+- **Score-ring tooltip** — explain the score basis ("heuristic score from N
+  signals, 0–100"); the current bare `opportunity` label is too vague.
