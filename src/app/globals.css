@@ -141,3 +141,63 @@ body {
 .skip-link:focus {
   top: 1rem;
 }
+
+/* Prose styling for trust pages (About / Privacy / Terms / Contact).
+   Plain CSS class instead of utility stacks — long-form legal/explanatory
+   text reads better with element selectors than hundreds of className props. */
+.prose-trust {
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.prose-trust h2 {
+  color: var(--color-text-primary);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 2rem 0 0.75rem;
+}
+.prose-trust h3 {
+  color: var(--color-text-primary);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+}
+.prose-trust p {
+  margin: 0.75rem 0;
+  max-width: 68ch;
+}
+.prose-trust ul,
+.prose-trust ol {
+  margin: 0.75rem 0;
+  padding-left: 1.25rem;
+  max-width: 68ch;
+}
+.prose-trust ul {
+  list-style: disc;
+}
+.prose-trust ol {
+  list-style: decimal;
+}
+.prose-trust li {
+  margin: 0.35rem 0;
+}
+.prose-trust a {
+  color: var(--color-accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-trust a:hover {
+  color: var(--color-accent);
+}
+.prose-trust strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+.prose-trust code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-border);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}

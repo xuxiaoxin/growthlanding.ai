@@ -54,15 +54,20 @@ export async function generateMetadata({
   // still follow links so internal link equity still flows.
   const thin = !detail?.description && detail?.survival_status !== "alive";
   const categorySuffix = detail?.category ? ` ${titleCase(detail.category)}` : "";
+  // Title here feeds layout.tsx's `title.template: "%s | GrowthRadar"`, so we
+  // return only the body and let the template append the site name. (OG/Twitter
+  // don't use the template, so they get the full hand-written title.)
+  const titleBody = `${d}${categorySuffix}`;
+  const fullTitle = `${titleBody} — GrowthRadar`;
   return {
-    title: `${d}${categorySuffix} — GrowthRadar`,
+    title: titleBody,
     description: desc,
     alternates: { canonical: `/domain/${encodeURIComponent(d)}` },
     robots: thin
       ? { index: false, follow: true }
       : { index: true, follow: true },
     openGraph: {
-      title: `${d}${categorySuffix} — GrowthRadar`,
+      title: fullTitle,
       description: desc,
       url: `${SITE_ORIGIN}/domain/${encodeURIComponent(d)}`,
       siteName: "GrowthRadar",
@@ -70,7 +75,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${d}${categorySuffix} — GrowthRadar`,
+      title: fullTitle,
       description: desc,
       images: ["/og.png"],
     },

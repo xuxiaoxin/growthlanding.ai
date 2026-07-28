@@ -24,11 +24,17 @@ import LeaderboardCard from "./LeaderboardCard";
 interface Props {
   items: DomainItem[];
   total: number;
+  /**
+   * Hide the category chips row. Used by /category/[cat] pages where the
+   * data is already single-category, so "All" + the one chip would be
+   * redundant. Defaults to false (homepage keeps its chips).
+   */
+  hideCategoryChips?: boolean;
 }
 
 const PAGE_SIZE = 24;
 
-export default function Leaderboard({ items, total }: Props) {
+export default function Leaderboard({ items, total, hideCategoryChips = false }: Props) {
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -118,7 +124,7 @@ export default function Leaderboard({ items, total }: Props) {
       </div>
 
       {/* Category chips */}
-      {categories.length > 0 && (
+      {categories.length > 0 && !hideCategoryChips && (
         <div className="flex gap-2 flex-wrap mb-5">
           <Chip
             active={activeCat === "all"}
