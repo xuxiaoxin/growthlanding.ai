@@ -12,6 +12,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import StatsBar from "@/components/StatsBar";
 import Leaderboard from "@/components/Leaderboard";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 import { getCategories, getFeatured, getStats } from "@/lib/data-server";
 import { relativeTime } from "@/lib/format";
 import { categoryPlural } from "@/lib/categories";
@@ -125,7 +126,7 @@ export default async function HomePage() {
             </Link>
           </nav>
           {/* Trust page links — E-E-A-T signal; AdSense eligibility. */}
-          <nav className="mt-3 flex flex-wrap justify-center gap-x-3 gap-y-1.5">
+          <nav className="mt-3 flex flex-wrap justify-center items-center gap-x-3 gap-y-1.5">
             <Link href="/about" className="hover:text-accent-ink transition-colors">
               About
             </Link>
@@ -135,6 +136,8 @@ export default async function HomePage() {
             <Link href="/terms" className="hover:text-accent-ink transition-colors">
               Terms
             </Link>
+            {/* GDPR: consent must be as easy to withdraw as to give. */}
+            <CookieSettingsButton className="hover:text-accent-ink transition-colors" />
           </nav>
         </div>
       </footer>

@@ -1,9 +1,9 @@
 /**
  * Privacy Policy (Server Component, static).
  *
- * Written to match the actual codebase (audited 2026-07-27): no analytics, no
- * ads, no cookies, no accounts, no form submissions. The only third-party
- * runtime calls are Vercel (hosting) and Google's favicon service. Keeping
+ * Written to match the actual codebase: Vercel Analytics (cookie-free) +
+ * Google Analytics (cookie-based, gated by Consent Mode v2 with an EEA
+ * consent banner). No advertising, no accounts, no form submissions. Keeping
  * this accurate is required for AdSense and for GDPR/CCPA good-faith
  * compliance — over- or under-disclosing both cause problems.
  *
@@ -18,13 +18,13 @@ import PageFooter from "@/components/PageFooter";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "GrowthRadar's privacy policy: no cookies, no cross-site tracking, no advertising. We use cookie-free, anonymous Vercel analytics and collect no personal data. Read the details.",
+    "GrowthRadar's privacy policy: how we use Vercel analytics (cookie-free) and Google Analytics (cookie-based, consent-gated in the EEA). No advertising, no cross-site tracking.",
   alternates: { canonical: "/privacy" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "Privacy Policy — GrowthRadar",
     description:
-      "No cookies, no cross-site tracking, no advertising. Privacy-friendly analytics only.",
+      "Cookie-free Vercel analytics + consent-gated Google Analytics. No advertising, no cross-site tracking.",
     url: "/privacy",
     siteName: "GrowthRadar",
     images: [{ url: "/og.png", width: 1200, height: 630 }],
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 };
 
 const SITE_ORIGIN = "https://growthlanding.ai";
-const LAST_UPDATED = "July 28, 2026";
+const LAST_UPDATED = "July 29, 2026";
 
 export default function PrivacyPage() {
   const breadcrumbLd = {
@@ -151,6 +151,58 @@ export default function PrivacyPage() {
               development.
             </p>
 
+            <h3>Google Analytics (cookie-based, consent-gated)</h3>
+            <p>
+              The Site also uses Google Analytics 4 to measure traffic. Unlike
+              the Vercel services above, Google Analytics uses{" "}
+              <strong>cookies</strong> (small files stored in your browser) to
+              recognize returning visitors and aggregate usage data. The main
+              cookies are <code>_ga</code> (distinguishes users, ~2 years) and{" "}
+              <code>_ga_&lt;id&gt;</code> (maintains session state, ~2 years).
+            </p>
+            <p>
+              Cookie-based tracking requires your consent under EU/UK law
+              (GDPR/ePrivacy). The Site implements Google Consent Mode v2 and a
+              consent banner for visitors in the European Economic Area (EEA)
+              and the United Kingdom:
+            </p>
+            <ul>
+              <li>
+                For <strong>EEA/UK visitors</strong>: Google Analytics cookies
+                are <strong>not</strong> set until you click &quot;Accept&quot; on the
+                banner. If you click &quot;Reject&quot; (or ignore it), Google still
+                receives an anonymous, cookieless ping so aggregate trends can
+                be modeled — but no cookie is written and you are not tracked
+                across sessions.
+              </li>
+              <li>
+                For <strong>visitors outside the EEA/UK</strong>: analytics is
+                permitted by default under the region settings, so cookies are
+                set without a banner. You can still opt out at any time via
+                &quot;Cookie Settings&quot; in the footer.
+              </li>
+            </ul>
+            <p>
+              You can change your choice any time by clicking{" "}
+              <strong>Cookie Settings</strong> in the footer. See{" "}
+              <a
+                href="https://support.google.com/analytics/answer/10033649"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Google Consent Mode reference
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://policies.google.com/technologies/cookies"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                how Google uses cookies
+              </a>
+              .
+            </p>
+
             <h3>Google Favicons (site icons)</h3>
             <p>
               To show the logo of each listed product, the Site loads small
@@ -177,23 +229,52 @@ export default function PrivacyPage() {
 
             <h2>3. Cookies and local storage</h2>
             <p>
-              The Site does <strong>not</strong> set any cookies and does{" "}
-              <strong>not</strong> use browser local storage or session storage.
-              There is no cookie banner because there is nothing to consent to.
+              The Site uses two kinds of storage, and keeps them to a minimum:
+            </p>
+            <ul>
+              <li>
+                <strong>Google Analytics cookies</strong> (<code>_ga</code>,{" "}
+                <code>_ga_&lt;id&gt;</code>) — only the GA service described in
+                Section 2 sets these. They last about 2 years and are used to
+                recognize returning visitors and aggregate usage. EEA/UK
+                visitors: these are set <strong>only after</strong> you accept
+                the consent banner.
+              </li>
+              <li>
+                <strong>Local storage</strong> — the Site stores your consent
+                choice (Accept / Reject) in a single local-storage entry named{" "}
+                <code>growthradar-consent</code> so the banner doesn&apos;t
+                reappear on every visit. This is strictly functional and
+                contains no identifying information.
+              </li>
+            </ul>
+            <p>
+              We do <strong>not</strong> set any advertising cookies, marketing
+              cookies, or third-party cookies other than those listed above.
+              There is no Facebook/Meta Pixel or cross-site behavioral tracking.
             </p>
 
             <h2>4. Analytics and advertising</h2>
             <p>
-              The Site uses <strong>privacy-friendly, cookie-free</strong>{" "}
-              analytics (Vercel Web Analytics and Speed Insights, detailed in
-              Section 2). These produce aggregate, anonymized statistics only.
+              The Site uses two analytics services, described in detail in
+              Section 2:
             </p>
+            <ul>
+              <li>
+                <strong>Vercel Web Analytics &amp; Speed Insights</strong> —
+                cookie-free and anonymous; no consent needed.
+              </li>
+              <li>
+                <strong>Google Analytics 4</strong> — cookie-based and
+                consent-gated for EEA/UK visitors via Consent Mode v2.
+              </li>
+            </ul>
             <p>
-              We deliberately do <strong>not</strong> use Google Analytics,
-              Facebook/Meta Pixel, or any cross-site behavioral tracking or
-              advertising network. We do <strong>not</strong> sell or share data
-              with advertisers. If we ever introduce a service that uses cookies
-              or tracks you across other websites, we will update this Policy
+              We do <strong>not</strong> use any advertising network and do
+              <strong> not</strong> sell or share data with advertisers. We do
+              <strong> not</strong> use cross-site behavioral trackers like the
+              Facebook/Meta Pixel. If we ever add advertising or another
+              cookie-based service, we will update this Policy{" "}
               <strong>before</strong> doing so and request consent where
               required.
             </p>

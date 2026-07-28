@@ -11,13 +11,14 @@
  */
 
 import Link from "next/link";
+import CookieSettingsButton from "./CookieSettingsButton";
 
 export default function PageFooter() {
   const year = new Date().getUTCFullYear();
   return (
     <footer className="border-t border-border py-6 mt-8">
       <div className="mx-auto max-w-3xl px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-text-muted">
-        <nav className="flex flex-wrap justify-center gap-x-3 gap-y-1.5" aria-label="Footer">
+        <nav className="flex flex-wrap justify-center items-center gap-x-3 gap-y-1.5" aria-label="Footer">
           <Link href="/about" className="hover:text-accent-ink transition-colors">
             About
           </Link>
@@ -27,6 +28,8 @@ export default function PageFooter() {
           <Link href="/terms" className="hover:text-accent-ink transition-colors">
             Terms
           </Link>
+          {/* GDPR: consent must be as easy to withdraw as to give. */}
+          <CookieSettingsButton className="hover:text-accent-ink transition-colors" />
         </nav>
         <p>© {year} GrowthRadar</p>
       </div>
