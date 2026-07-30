@@ -99,9 +99,9 @@ export default function TermsPage() {
               Site, and you should do your own independent research before acting.
             </p>
 
-            <h2>3. Accuracy and the opportunity score</h2>
+            <h2>3. Accuracy and the fit score</h2>
             <p>
-              The &quot;opportunity score&quot; and other signals (such as replication
+              The &quot;fit score&quot; and other signals (such as replication
               difficulty, competition level, and survival status) are{" "}
               <strong>approximate indicators</strong>, not measurements of fact.
               They may be out of date or simply wrong. Product features, pricing,

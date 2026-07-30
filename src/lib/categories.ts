@@ -67,7 +67,7 @@ export function categoryH1(cat: string): string {
  */
 export function categoryIntro(cat: string, count: number, dateStr: string): string {
   const plural = categoryPlural(cat).toLowerCase();
-  return `Discover ${count.toLocaleString()} newly launched ${plural} worth studying — ranked by opportunity score, with a short summary and key signals for each. Updated ${dateStr}.`;
+  return `Discover ${count.toLocaleString()} newly launched ${plural} worth studying — ranked by fit for solo founders, with a short summary and key signals for each. Updated ${dateStr}.`;
 }
 
 /**
@@ -75,5 +75,5 @@ export function categoryIntro(cat: string, count: number, dateStr: string): stri
  */
 export function categoryMetaDesc(cat: string, count: number): string {
   const plural = categoryPlural(cat).toLowerCase();
-  return `A curated list of ${count.toLocaleString()} newly launched ${plural.toLowerCase()}, ranked by opportunity score with summaries and key signals.`;
+  return `A curated list of ${count.toLocaleString()} newly launched ${plural.toLowerCase()}, ranked by fit for solo founders with summaries and key signals.`;
 }

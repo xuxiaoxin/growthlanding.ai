@@ -17,13 +17,13 @@ import PageFooter from "@/components/PageFooter";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "GrowthRadar is a curated directory of newly launched SaaS and AI products, ranked by opportunity score. Learn what it is and how to read the rankings.",
+    "GrowthRadar is a curated directory of newly launched SaaS and AI products, ranked by fit for solo founders. Learn what it is and how to read the rankings.",
   alternates: { canonical: "/about" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "About GrowthRadar",
     description:
-      "A curated directory of newly launched SaaS and AI products, ranked by opportunity score.",
+      "A curated directory of newly launched SaaS and AI products, ranked by fit for solo founders.",
     url: "/about",
     siteName: "GrowthRadar",
     images: [{ url: "/og.png", width: 1200, height: 630 }],
@@ -68,18 +68,18 @@ export default function AboutPage() {
             <p>
               GrowthRadar is a free, public directory of newly launched SaaS
               and AI products. Every entry is a real website that recently came
-              online, now ranked by an opportunity score. The goal is simple:
-              help founders, makers, and researchers spot interesting new
-              products early — and study what makes them worth watching.
+              online, now ranked by how well it fits a solo founder. The goal is
+              simple: help founders, makers, and researchers spot interesting
+              new products early — and study what makes them worth watching.
             </p>
 
             <h2>How to read the rankings</h2>
             <p>
-              The leaderboard is ordered by an opportunity score. A higher
-              score means a product looks more worth studying — not that it is
-              &quot;better&quot; or more likely to succeed. Treat the ranking as a
-              discovery tool: a starting point for your own research, not a
-              verdict.
+              The leaderboard is ordered by how well each product fits a solo
+              founder. A higher score means a product looks more worth studying
+              — not that it is &quot;better&quot; or more likely to succeed. Treat the
+              ranking as a discovery tool: a starting point for your own
+              research, not a verdict.
             </p>
             <p>
               Each product is tagged with a category, a short summary, and a

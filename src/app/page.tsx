@@ -64,8 +64,8 @@ export default async function HomePage() {
           </h1>
           <p className="text-text-secondary text-[15.5px] max-w-[580px] mt-3">
             A daily-updated leaderboard of newly launched, worth-studying
-            products — ranked by opportunity score and enriched with AI
-            analysis.
+            products — ranked by fit for solo founders, with an analysis of
+            what makes each one worth copying.
           </p>
 
           <div className="mt-[34px]">
@@ -80,8 +80,8 @@ export default async function HomePage() {
               Top opportunities
             </h2>
             <span className="text-[12.5px] text-text-muted">
-              {featured.total.toLocaleString()} curated sites, ranked by
-              opportunity
+              {featured.total.toLocaleString()} curated sites, ranked for
+              solo founders
             </span>
           </div>
 

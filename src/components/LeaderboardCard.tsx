@@ -186,7 +186,7 @@ function ScoreRing({
       viewBox={`0 0 ${viewBox} ${viewBox}`}
       className="shrink-0"
       role="img"
-      aria-label={`Opportunity score ${pct}`}
+      aria-label={`Fit score ${pct}`}
     >
       <circle
         cx={c}

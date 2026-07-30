@@ -1,59 +1,59 @@
 {
-  "total_featured": 775,
-  "total_scored": 60649,
-  "alive": 57157,
-  "dead": 3492,
-  "discovered_today": 883,
-  "discovered_7d": 23480,
+  "total_featured": 911,
+  "total_scored": 75685,
+  "alive": 71156,
+  "dead": 4530,
+  "discovered_today": 1171,
+  "discovered_7d": 25999,
   "top_categories": [
     {
       "category": "ai_tool",
-      "count": 350
+      "count": 353
     },
     {
       "category": "saas",
-      "count": 215
-    },
-    {
-      "category": "content",
-      "count": 52
+      "count": 220
     },
     {
       "category": "developer_tool",
-      "count": 34
+      "count": 80
+    },
+    {
+      "category": "content",
+      "count": 64
     },
     {
       "category": "finance",
-      "count": 28
-    },
-    {
-      "category": "ecommerce",
-      "count": 27
+      "count": 45
     },
     {
       "category": "education",
-      "count": 22
+      "count": 41
+    },
+    {
+      "category": "ecommerce",
+      "count": 34
     },
     {
       "category": "healthcare",
-      "count": 16
+      "count": 31
     },
     {
       "category": "portfolio",
-      "count": 9
+      "count": 10
     },
     {
       "category": "legal",
-      "count": 5
+      "count": 8
     },
     {
       "category": "real_estate",
-      "count": 2
+      "count": 4
     },
     {
       "category": "landing",
       "count": 1
     }
   ],
-  "generated_at": "2026-07-26T04:16:57Z"
+  "generated_at": "2026-07-30T06:04:27Z"
 }

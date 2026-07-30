@@ -24,13 +24,13 @@ export const metadata: Metadata = {
   // Title body only — layout.tsx appends "| GrowthRadar" via template.
   title: "Browse Categories",
   description:
-    "Browse all SaaS & AI product categories on GrowthRadar — AI tools, SaaS, developer tools, fintech, healthcare, and more. Curated and ranked by opportunity score.",
+    "Browse all SaaS & AI product categories on GrowthRadar — AI tools, SaaS, developer tools, fintech, healthcare, and more. Curated and ranked by fit for solo founders.",
   alternates: { canonical: "/category" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "Browse Categories — GrowthRadar",
     description:
-      "Browse all SaaS & AI product categories on GrowthRadar, ranked by opportunity score.",
+      "Browse all SaaS & AI product categories on GrowthRadar, ranked by fit for solo founders.",
     url: `${SITE_ORIGIN}/category`,
     siteName: "GrowthRadar",
     images: [{ url: "/og.png", width: 1200, height: 630 }],
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Browse Categories — GrowthRadar",
     description:
-      "Browse all SaaS & AI product categories on GrowthRadar, ranked by opportunity score.",
+      "Browse all SaaS & AI product categories on GrowthRadar, ranked by fit for solo founders.",
     images: ["/og.png"],
   },
 };
@@ -94,7 +94,7 @@ export default async function CategoryIndexPage() {
           <p className="text-text-secondary text-[15.5px] max-w-[580px] mt-3">
             {cats.length.toLocaleString()} categories covering{" "}
             {totalDomains.toLocaleString()} curated products — ranked by
-            opportunity score.
+            fit for solo founders.
           </p>
 
           {/* Category card grid */}

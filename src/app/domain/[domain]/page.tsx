@@ -207,7 +207,7 @@ function DetailBody({
               height={viewBox}
               viewBox={`0 0 ${viewBox} ${viewBox}`}
               role="img"
-              aria-label={`Opportunity score ${scorePct(detail.score)}`}
+              aria-label={`Fit score ${scorePct(detail.score)}`}
             >
               <circle
                 cx={viewBox / 2}
