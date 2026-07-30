@@ -61,6 +61,8 @@ export default function ConsentBanner() {
     updateConsent(choice === "granted");
     writeConsent(choice);
     setVisible(false);
+    // Notify same-tab listeners (e.g. ClarityConsentLoader) without a reload.
+    window.dispatchEvent(new Event("consent-change"));
   }
 
   // Avoid rendering anything during SSR / before hydration to prevent flashes
@@ -77,7 +79,8 @@ export default function ConsentBanner() {
       <div className="pointer-events-auto mx-auto max-w-3xl bg-card border border-border-strong rounded-[14px] shadow-[0_14px_34px_-12px_rgba(24,24,27,0.32)] p-4 sm:p-5">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           <p className="flex-1 text-[13px] sm:text-sm text-text-secondary leading-relaxed">
-            We use cookies for Google Analytics to understand traffic. See our{" "}
+            We use cookies for Google Analytics (traffic) and Microsoft Clarity
+            (session replays). See our{" "}
             <Link
               href="/privacy"
               className="text-accent-ink underline underline-offset-2 hover:text-accent"

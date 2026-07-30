@@ -3,9 +3,11 @@
  *
  * Written to match the actual codebase: Vercel Analytics (cookie-free) +
  * Google Analytics (cookie-based, gated by Consent Mode v2 with an EEA
- * consent banner). No advertising, no accounts, no form submissions. Keeping
- * this accurate is required for AdSense and for GDPR/CCPA good-faith
- * compliance — over- or under-disclosing both cause problems.
+ * consent banner) + Microsoft Clarity (cookie-based session replay, gated by
+ * the same consent banner — not loaded at all until consent). No advertising,
+ * no accounts, no form submissions. Keeping this accurate is required for
+ * AdSense and for GDPR/CCPA good-faith compliance — over- or under-disclosing
+ * both cause problems.
  *
  * SEO: canonical + meta description + BreadcrumbList JSON-LD.
  */
@@ -18,13 +20,13 @@ import PageFooter from "@/components/PageFooter";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "GrowthRadar's privacy policy: how we use Vercel analytics (cookie-free) and Google Analytics (cookie-based, consent-gated in the EEA). No advertising, no cross-site tracking.",
+    "GrowthRadar's privacy policy: Vercel analytics (cookie-free), Google Analytics, and Microsoft Clarity (both cookie-based, consent-gated in the EEA). No advertising, no cross-site tracking.",
   alternates: { canonical: "/privacy" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "Privacy Policy — GrowthRadar",
     description:
-      "Cookie-free Vercel analytics + consent-gated Google Analytics. No advertising, no cross-site tracking.",
+      "Cookie-free Vercel analytics + consent-gated Google Analytics and Microsoft Clarity. No advertising, no cross-site tracking.",
     url: "/privacy",
     siteName: "GrowthRadar",
     images: [{ url: "/og.png", width: 1200, height: 630 }],
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
 };
 
 const SITE_ORIGIN = "https://growthlanding.ai";
-const LAST_UPDATED = "July 29, 2026";
+const LAST_UPDATED = "July 30, 2026";
 
 export default function PrivacyPage() {
   const breadcrumbLd = {
@@ -96,7 +98,7 @@ export default function PrivacyPage() {
 
             <h2>2. Third-party services</h2>
             <p>
-              The Site is intentionally lean. As of the last update, only two
+              The Site is intentionally lean. As of the last update, only three
               third parties process any data in connection with your visit:
             </p>
 
@@ -203,6 +205,44 @@ export default function PrivacyPage() {
               .
             </p>
 
+            <h3>Microsoft Clarity (session replay, consent-gated)</h3>
+            <p>
+              The Site uses <strong>Microsoft Clarity</strong> to record
+              anonymous <strong>session replays</strong> and generate{" "}
+              <strong>heatmaps</strong> — short recordings of how visitors move
+              around and click on pages, used to find usability problems. Clarity
+              uses <strong>cookies</strong> (mainly <code>_clck</code> and{" "}
+              <code>_clsk</code>) to stitch page views into a session.
+            </p>
+            <p>
+              Because Clarity is cookie-based, it is held to the{" "}
+              <strong>same consent gate as Google Analytics</strong>: the Clarity
+              code is <strong>not loaded at all</strong> until you click
+              &quot;Accept&quot; on the consent banner. If you reject (or ignore) the
+              banner, <strong>no Clarity script runs, no recording is made, and
+              no Clarity cookie is set</strong>. This is stricter than Clarity&apos;s
+              own default, which would load immediately in a cookieless mode — we
+              defer it entirely so nothing is collected before you opt in. If you
+              later change your mind, clicking &quot;Reject&quot; in Cookie Settings
+              tells Clarity to delete its cookies and end the session. See{" "}
+              <a
+                href="https://learn.microsoft.com/clarity/setup-and-installation/consent-mode"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Clarity Consent Mode
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://privacy.microsoft.com/en-us/privacystatement"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Microsoft&apos;s Privacy Statement
+              </a>
+              .
+            </p>
+
             <h3>Google Favicons (site icons)</h3>
             <p>
               To show the logo of each listed product, the Site loads small
@@ -229,7 +269,7 @@ export default function PrivacyPage() {
 
             <h2>3. Cookies and local storage</h2>
             <p>
-              The Site uses two kinds of storage, and keeps them to a minimum:
+              The Site uses three kinds of storage, and keeps them to a minimum:
             </p>
             <ul>
               <li>
@@ -239,6 +279,14 @@ export default function PrivacyPage() {
                 recognize returning visitors and aggregate usage. EEA/UK
                 visitors: these are set <strong>only after</strong> you accept
                 the consent banner.
+              </li>
+              <li>
+                <strong>Microsoft Clarity cookies</strong> (<code>_clck</code>,{" "}
+                <code>_clsk</code>) — set by the session-replay service described
+                in Section 2 to group page views into a recording. They last
+                roughly up to 1 year. Like the GA cookies, EEA/UK visitors: these
+                are set <strong>only after</strong> you accept the consent banner
+                (Clarity does not load until then).
               </li>
               <li>
                 <strong>Local storage</strong> — the Site stores your consent
@@ -256,7 +304,7 @@ export default function PrivacyPage() {
 
             <h2>4. Analytics and advertising</h2>
             <p>
-              The Site uses two analytics services, described in detail in
+              The Site uses three analytics services, described in detail in
               Section 2:
             </p>
             <ul>
@@ -267,6 +315,11 @@ export default function PrivacyPage() {
               <li>
                 <strong>Google Analytics 4</strong> — cookie-based and
                 consent-gated for EEA/UK visitors via Consent Mode v2.
+              </li>
+              <li>
+                <strong>Microsoft Clarity</strong> — cookie-based session
+                replay; not loaded at all until consent is granted (stricter
+                than its default).
               </li>
             </ul>
             <p>

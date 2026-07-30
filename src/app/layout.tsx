@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import ConsentBanner from "@/components/ConsentBanner";
+import ClarityConsentLoader from "@/components/ClarityConsentLoader";
 import { GA_MEASUREMENT_ID } from "@/lib/consent";
 import "./globals.css";
 
@@ -119,6 +120,9 @@ export default function RootLayout({
             self-hosted). See /privacy for what's collected. */}
         <VercelAnalytics />
         <SpeedInsights />
+        {/* Clarity (session replay) — NOT loaded until the visitor grants
+            analytics_storage consent. See ClarityConsentLoader. */}
+        <ClarityConsentLoader />
         <ConsentBanner />
       </body>
     </html>
