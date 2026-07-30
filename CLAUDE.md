@@ -21,12 +21,12 @@ The site is **100% statically generated** at build time:
 - `/category/[cat]` — Server Component, `generateStaticParams` returns the 13
   category slugs, `dynamicParams = false` (unknown slug → 404). These are core
   SEO pages (blue-ocean "new/latest {category}" queries).
-- `/domain/[domain]` — Server Component, `generateStaticParams` returns the ~775
+- `/domain/[domain]` — Server Component, `generateStaticParams` returns the ~911
   featured domains, `dynamicParams = false` (non-featured → 404). One static
   HTML per domain.
 - `/about`, `/privacy`, `/terms` — 3 static trust/legal pages.
 
-Total: ~799 static pages (1 home + 1 category index + 13 category + ~775
+Total: ~934 static pages (1 home + 1 category index + 13 category + ~911
 domain + 3 trust + sitemap.xml + robots.txt + not-found).
 
 No `use client` data fetching remains. Pages are instant (CDN) and SEO-friendly
@@ -74,6 +74,15 @@ What IS public: the score (bare number), LLM analysis (category/summary/
 description/key_features/target_users/why_interesting/replication_difficulty/
 competition_level), and survival_status (alive/dead — publicly observable).
 
+## Ranking axis (OPC)
+
+The home page is ranked by **`opc_rank_score`** (OPC = "one-person company"
+adaptability), with user-visible copy "fit for solo founders". The
+`opportunity_score` is still displayed as the **bare score number** (the score
+ring / card label) but is **no longer the ranking axis** — do not describe it
+as what the leaderboard is sorted by. Ranking methodology lives outside this
+dir: see root `PIPELINE.md` §6.5 and `analyzers/.spec/OPC_SCORING.md`.
+
 ## Data contracts
 
 `src/types/index.ts` mirrors `export-webui.py` output. Three-state semantics
@@ -88,7 +97,7 @@ at build time.
 
 ```bash
 npm run dev      # dev server on :3000
-npm run build    # production build (775+ static pages)
+npm run build    # production build (911+ static pages)
 npm run lint
 ```
 

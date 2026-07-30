@@ -6,12 +6,13 @@ opportunities surfaced by the `monitors` + `analyzers` pipeline.
 
 ## What it is
 
-A **curated, featured-only** static site. The home page lists ~775 hand-picked
-domains ranked by an opportunity score; each has a detail page with an
+A **curated, featured-only** static site. The home page lists ~911 hand-picked
+domains ranked by fit for solo founders (OPC); each has a detail page with an
 analysis of what it does, core features, who it's for, and why it's worth
 studying.
 
-- **Home** — ranked cards of all featured domains (score, category, summary).
+- **Home** — ranked cards of all featured domains, ordered by fit for solo
+  founders (score, category, summary).
 - **Category index** (`/category`) + 13 category pages (`/category/<cat>`) —
   browse by category (ai_tool, saas, marketing, …).
 - **Detail pages** (`/domain/<domain>`) — full analysis for each.
@@ -28,13 +29,13 @@ fetching, no database, no API at runtime. Data is read from `public/data/`
 via Node `fs` during `next build` (see `src/lib/data-server.ts`) and baked
 into static HTML.
 
-Routes (~799 static pages in total):
+Routes (~934 static pages in total):
 
 - `/` — home, prerendered with all featured cards.
 - `/category` — category index (gateway to the 13 categories).
 - `/category/[cat]` — one page per category (13 pages), also
   `generateStaticParams` + `dynamicParams = false`.
-- `/domain/[domain]` — one static HTML per featured domain (~775 pages),
+- `/domain/[domain]` — one static HTML per featured domain (~911 pages),
   via `generateStaticParams` + `dynamicParams = false` (non-featured → 404).
 - `/about`, `/privacy`, `/terms` — 3 trust/legal pages.
 
@@ -73,7 +74,7 @@ Files under `public/data/`:
 ```bash
 npm install
 npm run dev      # http://localhost:3000
-npm run build    # production build (generates 775+ static pages)
+npm run build    # production build (generates 911+ static pages)
 npm run lint
 ```
 
