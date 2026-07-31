@@ -54,6 +54,16 @@ export async function getDetail(domain: string): Promise<DomainDetail | null> {
 }
 
 /**
+ * Count of featured domains (the curated total shown across the site). Reads
+ * the `total` field straight off featured-details.json so the detail page can
+ * feed SiteFooter without pulling the whole leaderboard list.
+ */
+export async function getFeaturedTotal(): Promise<number> {
+  const env = await readJson<DetailEnvelope>("featured-details.json");
+  return env.total;
+}
+
+/**
  * All categories with their item counts, derived from featured.json (NOT
  * stats.json — the two are out of sync: stats.top_categories omits several
  * large featured categories like marketing/other/design and includes
@@ -95,4 +105,31 @@ export async function getCategorySlugs(): Promise<string[]> {
 export async function getByCategory(cat: string): Promise<DomainItem[]> {
   const f = await getFeatured();
   return f.items.filter((it) => it.category === cat);
+}
+
+/**
+ * Same-category "related sites" for the detail-page recommendation rail.
+ *
+ * Reuses getByCategory()'s score-desc ordering, excludes the current domain,
+ * and caps at `limit`. Returns [] when the category is missing OR when the
+ * domain is the only item in its category — the caller should then omit the
+ * whole rail (rendering an empty heading looks broken).
+ *
+ * Server-only (reads fs via getFeatured). Only returns public DomainItem
+ * fields — no desensitized detection signals are ever touched here.
+ *
+ * @param domain    current domain (excluded from results)
+ * @param category  category slug from detail.category; null/empty → []
+ * @param limit     desired count, default 6 (the page shows 4–6)
+ */
+export async function getRelatedByCategory(
+  domain: string,
+  category: string | null | undefined,
+  limit = 6,
+): Promise<DomainItem[]> {
+  if (!category) return [];
+  const items = await getByCategory(category);
+  return items
+    .filter((it) => it.domain !== domain)
+    .slice(0, limit);
 }

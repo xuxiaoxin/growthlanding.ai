@@ -8,14 +8,12 @@
  *    described as a list item to search engines (rich-result eligible).
  */
 
-import Link from "next/link";
 import Header from "@/components/Header";
 import StatsBar from "@/components/StatsBar";
 import Leaderboard from "@/components/Leaderboard";
-import CookieSettingsButton from "@/components/CookieSettingsButton";
+import SiteFooter from "@/components/SiteFooter";
 import { getCategories, getFeatured, getStats } from "@/lib/data-server";
 import { relativeTime } from "@/lib/format";
-import { categoryPlural } from "@/lib/categories";
 
 const SITE_ORIGIN = "https://growthlanding.ai";
 
@@ -92,55 +90,7 @@ export default async function HomePage() {
           )}
         </section>
       </main>
-      <footer className="border-t border-border py-6">
-        <div className="mx-auto max-w-5xl px-4 text-center text-xs text-text-muted">
-          <p>
-            GrowthRadar surfaces newly launched, worth-studying SaaS &amp; AI
-            products. Rankings are for discovery only — not endorsements.
-          </p>
-          <p className="mt-1">
-            Data refreshed daily from the{" "}
-            <span className="text-text-secondary">monitors + analyzers</span>{" "}
-            pipeline.
-          </p>
-          {/* Category entry points — static internal links so crawlers and
-              users can reach every category hub page from the homepage. The
-              leaderboard chips above stay client-side filters (instant UX);
-              this section is the crawlable gateway to /category/[cat]. */}
-          <nav className="mt-4 flex flex-wrap justify-center gap-x-3 gap-y-1.5">
-            <span className="text-text-muted">Browse by category:</span>
-            {categories.slice(0, 8).map((c) => (
-              <Link
-                key={c.category}
-                href={`/category/${encodeURIComponent(c.category)}`}
-                className="text-text-secondary hover:text-accent-ink transition-colors"
-              >
-                {categoryPlural(c.category)}
-              </Link>
-            ))}
-            <Link
-              href="/category"
-              className="text-accent-ink hover:underline"
-            >
-              All →
-            </Link>
-          </nav>
-          {/* Trust page links — E-E-A-T signal; AdSense eligibility. */}
-          <nav className="mt-3 flex flex-wrap justify-center items-center gap-x-3 gap-y-1.5">
-            <Link href="/about" className="hover:text-accent-ink transition-colors">
-              About
-            </Link>
-            <Link href="/privacy" className="hover:text-accent-ink transition-colors">
-              Privacy
-            </Link>
-            <Link href="/terms" className="hover:text-accent-ink transition-colors">
-              Terms
-            </Link>
-            {/* GDPR: consent must be as easy to withdraw as to give. */}
-            <CookieSettingsButton className="hover:text-accent-ink transition-colors" />
-          </nav>
-        </div>
-      </footer>
+      <SiteFooter categories={categories} total={featured.total} />
 
       {/* ItemList structured data for the leaderboard. */}
       <script

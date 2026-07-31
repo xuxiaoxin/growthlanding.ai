@@ -17,18 +17,23 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Favicon from "@/components/Favicon";
-import { getDetail, getFeaturedDomains } from "@/lib/data-server";
+import SiteFooter from "@/components/SiteFooter";
+import type { DomainItem } from "@/types";
+import { getDetail, getFeaturedDomains, getFeaturedTotal, getRelatedByCategory, getCategories } from "@/lib/data-server";
 import {
   siteUrl,
   scorePct,
   formatDate,
   relativeTime,
   titleCase,
+  faviconUrl,
+  domainLetter,
   difficultyDotColor,
   difficultyLabel,
   scoreRingFill,
   scoreRingDash,
 } from "@/lib/format";
+import { categoryPlural } from "@/lib/categories";
 
 export const dynamicParams = false;
 
@@ -50,9 +55,11 @@ export async function generateMetadata({
   const desc =
     detail?.summary ??
     `Opportunity analysis for ${d}: what it does and why it's worth studying.`;
-  // Thin content (no description AND not alive) → keep out of the index but
-  // still follow links so internal link equity still flows.
-  const thin = !detail?.description && detail?.survival_status !== "alive";
+  // Thin content (no description) → keep out of the index but still follow
+  // links so internal link equity still flows. Tightened from the old
+  // "!description && not alive" rule: an alive page with only a ~12-word
+  // summary is still too thin to spend crawl budget on, regardless of status.
+  const thin = !detail?.description;
   const categorySuffix = detail?.category ? ` ${titleCase(detail.category)}` : "";
   // Title here feeds layout.tsx's `title.template: "%s | GrowthRadar"`, so we
   // return only the body and let the template append the site name. (OG/Twitter
@@ -92,6 +99,14 @@ export default async function DomainPage({
   const detail = await getDetail(domain);
   if (!detail) notFound();
 
+  // Related sites (same category, excluding self) + category list for the
+  // shared footer. All build-time reads from the static JSON.
+  const [related, categories, total] = await Promise.all([
+    getRelatedByCategory(domain, detail.category, 6),
+    getCategories(),
+    getFeaturedTotal(),
+  ]);
+
   return (
     <>
       <a href="#main" className="skip-link">
@@ -99,8 +114,9 @@ export default async function DomainPage({
       </a>
       <Header />
       <main id="main" className="flex-1 pb-16">
-        <DetailBody domain={domain} detail={detail} />
+        <DetailBody domain={domain} detail={detail} related={related} />
       </main>
+      <SiteFooter categories={categories} total={total} />
     </>
   );
 }
@@ -108,14 +124,19 @@ export default async function DomainPage({
 function DetailBody({
   domain,
   detail,
+  related,
 }: {
   domain: string;
   detail: NonNullable<Awaited<ReturnType<typeof getDetail>>>;
+  related: DomainItem[];
 }) {
   const fill = scoreRingFill(detail.score);
   const ringR = 26;
   const viewBox = 64;
   const { dasharray, dashoffset } = scoreRingDash(fill, ringR);
+  // Mirrors the generateMetadata noindex rule: no description → too thin to
+  // show the (skipped) content sections, so we render a fallback card instead.
+  const isThin = !detail.description;
 
   // Structured data: describe the product (SoftwareApplication) + breadcrumb.
   const canonical = `${SITE_ORIGIN}/domain/${encodeURIComponent(domain)}`;
@@ -136,30 +157,80 @@ function DetailBody({
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Leaderboard",
-        item: SITE_ORIGIN,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: domain,
-        item: canonical,
-      },
-    ],
+    // 3-segment trail when a category is present (Home › Category › Domain),
+    // 2-segment fallback (Home › Domain) otherwise — kept in lockstep with the
+    // visible breadcrumb below so schema and UI never disagree.
+    itemListElement: detail.category
+      ? [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: `${SITE_ORIGIN}/`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: categoryPlural(detail.category),
+            item: `${SITE_ORIGIN}/category/${encodeURIComponent(detail.category)}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: domain,
+            item: canonical,
+          },
+        ]
+      : [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: `${SITE_ORIGIN}/`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: domain,
+            item: canonical,
+          },
+        ],
   };
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-1 text-sm text-text-secondary hover:text-primary transition-colors mb-6"
-      >
-        ← Leaderboard
-      </Link>
+      {/* Visible breadcrumb — mirrors BreadcrumbList JSON-LD exactly so the
+          on-page trail and the rich-result schema never disagree. The current
+          domain is a plain (non-clickable) span; Home and Category are links. */}
+      <nav aria-label="Breadcrumb" className="mb-6">
+        <ol className="flex flex-wrap items-center gap-1.5 text-sm text-text-muted">
+          <li>
+            <Link
+              href="/"
+              className="hover:text-text-primary transition-colors"
+            >
+              Home
+            </Link>
+          </li>
+          {detail.category && (
+            <>
+              <li aria-hidden className="text-text-muted">›</li>
+              <li>
+                <Link
+                  href={`/category/${encodeURIComponent(detail.category)}`}
+                  className="hover:text-text-primary transition-colors"
+                >
+                  {categoryPlural(detail.category)}
+                </Link>
+              </li>
+            </>
+          )}
+          <li aria-hidden className="text-text-muted">›</li>
+          <li aria-current="page" className="text-text-secondary font-medium truncate max-w-[40ch]">
+            {domain}
+          </li>
+        </ol>
+      </nav>
 
       {/* Header card */}
       <div className="bg-card border border-border rounded-[14px] p-6">
@@ -263,45 +334,75 @@ function DetailBody({
         </div>
       </div>
 
-      {/* Description */}
-      {detail.description && (
-        <Section title="What it does">
-          <p className="text-text-secondary leading-relaxed max-w-3xl">
-            {detail.description}
-          </p>
+      {isThin ? (
+        // Thin-page empty state — these domains have only a ~12-word summary,
+        // so the content sections above would be skipped and the page would
+        // collapse to Hero + a lone Details card. This fallback explains the
+        // gap instead of leaving an awkward void (and the page is noindexed).
+        <Section title="Full analysis coming soon">
+          <div className="flex flex-col items-center text-center py-6 gap-3">
+            <p className="text-text-secondary max-w-md">
+              We&apos;re still analyzing{" "}
+              <span className="font-semibold text-text-primary">{domain}</span>{" "}
+              — a detailed breakdown (what it does, core features, who it&apos;s
+              for) is being put together. In the meantime, here&apos;s the
+              snapshot we have so far.
+            </p>
+            <Link
+              href={
+                detail.category
+                  ? `/category/${encodeURIComponent(detail.category)}`
+                  : "/"
+              }
+              className="text-sm font-medium text-accent-ink hover:text-accent transition-colors"
+            >
+              {detail.category
+                ? `Browse more ${categoryPlural(detail.category).toLowerCase()} →`
+                : "Back to leaderboard →"}
+            </Link>
+          </div>
         </Section>
-      )}
-
-      {/* Key features */}
-      {detail.key_features.length > 0 && (
-        <Section title="Core features">
-          <ul className="grid sm:grid-cols-2 gap-2">
-            {detail.key_features.map((f, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-2 text-sm text-text-secondary bg-background border border-border rounded-[10px] px-3 py-2"
-              >
-                <span className="text-text-muted mt-0.5">•</span>
-                <span>{f}</span>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      )}
-
-      {/* Target users + why interesting */}
-      <div className="grid sm:grid-cols-2 gap-4 mt-6">
-        {detail.target_users && (
-          <Section title="Who it's for">
-            <p className="text-sm text-text-secondary">{detail.target_users}</p>
+      ) : (
+        <>
+          {/* Description */}
+          <Section title="What it does">
+            <p className="text-text-secondary leading-relaxed max-w-3xl">
+              {detail.description}
+            </p>
           </Section>
-        )}
-        {detail.why_interesting && (
-          <Section title="Why it's worth studying">
-            <p className="text-sm text-text-secondary">{detail.why_interesting}</p>
-          </Section>
-        )}
-      </div>
+
+          {/* Key features */}
+          {detail.key_features.length > 0 && (
+            <Section title="Core features">
+              <ul className="grid sm:grid-cols-2 gap-2">
+                {detail.key_features.map((f, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-2 text-sm text-text-secondary bg-background border border-border rounded-[10px] px-3 py-2"
+                  >
+                    <span className="text-text-muted mt-0.5">•</span>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          )}
+
+          {/* Target users + why interesting */}
+          <div className="grid sm:grid-cols-2 gap-4 mt-6">
+            {detail.target_users && (
+              <Section title="Who it's for">
+                <p className="text-sm text-text-secondary">{detail.target_users}</p>
+              </Section>
+            )}
+            {detail.why_interesting && (
+              <Section title="Why it's worth studying">
+                <p className="text-sm text-text-secondary">{detail.why_interesting}</p>
+              </Section>
+            )}
+          </div>
+        </>
+      )}
 
       {/* Meta */}
       <Section title="Details">
@@ -316,6 +417,14 @@ function DetailBody({
       <p className="text-[11px] text-text-muted mt-8 text-center">
         For informational purposes only. Not an endorsement.
       </p>
+
+      {/* Related sites — same-category internal links. The last link in the
+          4-layer graph (detail → detail). Omit entirely when there's nothing
+          to recommend (e.g. this domain is the only one in its category) so we
+          never render an empty heading. */}
+      {related.length > 0 && (
+        <RelatedRail related={related} category={detail.category} />
+      )}
 
       {/* Structured data */}
       <script
@@ -374,5 +483,119 @@ function MetaRow({ label, value }: { label: string; value: string }) {
       <dt className="text-text-muted shrink-0">{label}</dt>
       <dd className="text-text-primary text-right truncate">{value}</dd>
     </div>
+  );
+}
+
+/**
+ * "Related {Category}" rail — same-category internal links, the last edge in
+ * the 4-layer graph (detail → detail). Renders a section heading + a responsive
+ * grid of compact cards. The cards echo the leaderboard card shape (favicon +
+ * domain + summary + small score ring) but are server-rendered <Link>s, so they
+ * are crawlable and instant.
+ */
+function RelatedRail({
+  related,
+  category,
+}: {
+  related: DomainItem[];
+  category: string | null;
+}) {
+  return (
+    <section className="mt-10">
+      <h2 className="text-sm font-semibold text-text-primary mb-3 flex items-baseline gap-2">
+        {category ? `More ${categoryPlural(category)}` : "Related sites"}
+        <span className="text-xs font-normal text-text-muted">
+          worth studying
+        </span>
+      </h2>
+      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {related.map((it) => (
+          <li key={it.domain}>
+            <RelatedCard item={it} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/**
+ * A single related-site card. Server Component (no onError handler needed — the
+ * favicon image tag degrades to a blank tile if Google's favicon service
+ * returns nothing, which is acceptable here since these are secondary links).
+ */
+function RelatedCard({ item }: { item: DomainItem }) {
+  const fill = scoreRingFill(item.score);
+  const r = 13;
+  const vb = 34;
+  const { dasharray, dashoffset } = scoreRingDash(fill, r);
+  return (
+    <Link
+      href={`/domain/${encodeURIComponent(item.domain)}`}
+      className="group flex items-center gap-3 bg-card border border-border rounded-[12px] px-3 py-2.5 transition-colors hover:border-accent"
+    >
+      <div className="relative shrink-0 w-9 h-9 rounded-[10px] bg-stone-100 grid place-items-center overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={faviconUrl(item.domain)}
+          alt=""
+          width={24}
+          height={24}
+          loading="lazy"
+          decoding="async"
+          className="w-[24px] h-[24px] rounded-[8px] object-contain"
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-text-primary text-[14px] font-semibold truncate group-hover:text-accent-ink transition-colors">
+          {item.domain}
+        </div>
+        <p className="text-[12.5px] text-text-muted truncate">
+          {item.summary ?? (item.business_model ? titleCase(item.business_model) : "")}
+        </p>
+      </div>
+      {/* Small score ring — single accent, magnitude only (same philosophy as
+          the leaderboard). */}
+      <svg
+        width={vb}
+        height={vb}
+        viewBox={`0 0 ${vb} ${vb}`}
+        className="shrink-0"
+        role="img"
+        aria-label={`Fit score ${scorePct(item.score)}`}
+      >
+        <circle
+          cx={vb / 2}
+          cy={vb / 2}
+          r={r}
+          fill="none"
+          stroke="var(--color-border)"
+          strokeWidth="3"
+        />
+        <circle
+          cx={vb / 2}
+          cy={vb / 2}
+          r={r}
+          fill="none"
+          stroke="var(--color-accent)"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeDasharray={dasharray}
+          strokeDashoffset={dashoffset}
+          transform={`rotate(-90 ${vb / 2} ${vb / 2})`}
+        />
+        <text
+          x={vb / 2}
+          y={vb / 2}
+          fontSize="8"
+          fontWeight="700"
+          textAnchor="middle"
+          dominantBaseline="central"
+          className="fill-text-primary tabular-nums"
+        >
+          {scorePct(item.score)}
+        </text>
+      </svg>
+    </Link>
   );
 }
