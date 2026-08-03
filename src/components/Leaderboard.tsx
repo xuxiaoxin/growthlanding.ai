@@ -6,13 +6,17 @@
  *  - Category chips (derived from the curated list itself)
  *  - "Load more" pagination (shows PAGE_SIZE at a time)
  *
- * SEO note (important): ALL items are rendered into the initial server HTML
- * so every detail page is internally linked and crawlable — the 775-link
- * internal graph is the homepage's core SEO asset. Overflow is hidden via a
- * `hidden` CSS class (display:none), NOT by omitting nodes, so:
- *   - crawlers still see the full link graph in the HTML source
+ * SEO note (important): ALL items contribute an internal link to the initial
+ * server HTML so every detail page is crawlable — the homepage's link graph
+ * is its core SEO asset. But only items in the visible window get the full
+ * LeaderboardCard markup (score-ring SVG + favicon <img> + pills); the rest
+ * are kept as lightweight `<a>` links hidden via the `hidden` CSS class
+ * (display:none). This keeps the link graph intact without baking ~2MB of
+ * hidden card markup into the page. So:
+ *   - crawlers still see every /domain/ link in the HTML source
  *   - React hydration matches (server + client render the same nodes)
- *   - search / category filter just toggles the `hidden` class per card
+ *   - search / category filter just toggles `hidden` + swaps in the full
+ *     card when a row enters the visible window
  */
 "use client";
 
@@ -150,8 +154,10 @@ export default function Leaderboard({ items, total, hideCategoryChips = false }:
         </div>
       )}
 
-      {/* List — every item is rendered (SEO link graph); overflow hidden via CSS.
-          <ol> conveys the ranking semantics to assistive tech. */}
+      {/* List — every item contributes a link (SEO link graph), but only items
+          in the visible window get full card markup; the rest are lightweight
+          hidden `<a>` links so the page stays small. <ol> conveys the ranking
+          semantics to assistive tech. */}
       {totalFiltered === 0 ? (
         <p className="text-text-muted text-center py-20">
           No sites match “{query}”.
@@ -163,8 +169,25 @@ export default function Leaderboard({ items, total, hideCategoryChips = false }:
             const rankInFiltered = filteredRanks.get(item.domain);
             const inFiltered = rankInFiltered !== undefined;
             const isVisible = inFiltered && rankInFiltered! <= visibleCount;
+            if (!isVisible) {
+              // Keep the internal link in the DOM for SEO crawlability, but
+              // drop the heavy card markup for rows the user can't see yet.
+              // (Equivalent weight to a plain <li><a> node — no SVG/favicon.)
+              return (
+                <li key={item.domain} className="hidden">
+                  <a
+                    href={`/domain/${encodeURIComponent(item.domain)}`}
+                    tabIndex={-1}
+                    aria-hidden
+                    className="sr-only"
+                  >
+                    {item.domain}
+                  </a>
+                </li>
+              );
+            }
             return (
-              <li key={item.domain} className={isVisible ? "" : "hidden"}>
+              <li key={item.domain}>
                 <LeaderboardCard
                   item={item}
                   rank={rankInFiltered ?? i + 1}
