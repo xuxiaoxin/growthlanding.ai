@@ -42,7 +42,9 @@ export default function SiteFooter({ categories, total }: Props) {
         {/* Category entry points — static internal links so crawlers and
             users can reach every category hub page from any page on the site.
             On the homepage these duplicate the (client-side) chip filters;
-            on detail pages they are the only crawlable gateway to /category. */}
+            on detail pages they are the only crawlable gateway to /category.
+            The Playbooks link sits alongside them as a supplementary content
+            entry point (the header carries the main /playbooks link). */}
         <nav className="mt-4 flex flex-wrap justify-center gap-x-3 gap-y-1.5">
           <span className="text-text-muted">Browse by category:</span>
           {categories.slice(0, 8).map((c) => (
@@ -59,6 +61,14 @@ export default function SiteFooter({ categories, total }: Props) {
             className="text-accent-ink hover:underline"
           >
             All →
+          </Link>
+        </nav>
+        <nav className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1.5">
+          <Link
+            href="/playbooks"
+            className="text-text-secondary hover:text-accent-ink transition-colors"
+          >
+            Playbooks
           </Link>
         </nav>
         {/* Trust page links — E-E-A-T signal; AdSense eligibility;

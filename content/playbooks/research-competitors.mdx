@@ -1,0 +1,124 @@
+export const metadata = {
+  title: "Researching Competitors Without a Paid Tool",
+  description:
+    "A repeatable way for solo founders to study rival projects — read positioning, surface area, and moat to see whether a lane is crowded or still open.",
+  slug: "research-competitors",
+  category: "discovery",
+  order: 2,
+}
+
+import { DomainCard } from '@/components/DomainCard'
+
+**TL;DR** — You don't need a $99/mo research tool to know if a direction is worth pursuing. Three reads turn a lane full of rival projects into a map of where the openings are:
+
+- **Read the job, not the feature list.** A narrow job is easier to enter and easier to replicate; a broad platform is the opposite.
+- **Read replication difficulty as a moat proxy.** Low means one person could rebuild it — solo-friendly, but so could everyone else.
+- **Read what's absent.** No marketplace, no regulated data, no enterprise sales is the signature of a project a solo founder can actually carry.
+
+Do these before you write a line of code, and "is this already taken?" stops being a question you avoid.
+
+## Who this is for, and where it stops
+
+This is for solo founders and independent makers who have a direction and want to know whether it's already spoken for — or whether the lane is fuller than it looks. Most aren't avoiding the research; they're avoiding the paid tool that promises to do it for them.
+
+This playbook covers **validation at the lane level**: sizing up the projects already in a space and judging whether there's room. It does not cover pricing tests, demand interviews, or launch — those come after you've decided a lane is worth entering. The [discovery playbook](/playbooks/find-what-to-build) is the step before this one; this is where you pressure-test what you found.
+
+## The three reads at a glance
+
+Each read answers a different fear. Together they turn "someone already built this" from a shutdown into a map.
+
+```text
+  pick a lane you're curious about
+                 |
+  [1]  what job does each project do?
+                 |
+  [2]  how hard is it to rebuild? (replication difficulty)
+                 |
+  [3]  what does it NOT need to exist?
+                 v
+   a map of where the seams still are
+```
+
+**How to read the examples below.** They aren't ranked by traffic or funding. They're recent, still forming, and chosen because they show the same lane from different angles — the kind of comparison you'd run yourself, just earlier and across far more ground than a single search tab allows.
+
+## Read 1 — The job, not the feature list
+
+A project's value lives in the job it takes on, not the features it lists. Two projects can look identical in a screenshot and sit in completely different places on the solo-friendly-to-needs-a-team spectrum.
+
+The fastest tell is surface area. A project that does one thing — pull subtitles off a video, archive your chats — has a small surface to defend and a small surface to rebuild. A project that is a whole platform has the opposite profile. Neither is bad; they're different bets.
+
+<DomainCard domain="fluxgen.xyz" />
+
+`FluxGen` is an AI image-generation platform offering curated aesthetic styles through a credit system. Launched recently and carrying a **low replication difficulty** — shorthand for how little team, capital, or specialist access it would take to rebuild — it is the lean shape of a solo entrant: a clear job, a thin surface area, no moat you'd need a team to hold.
+
+## Read 2 — Replication difficulty as a moat proxy
+
+This is the read most people skip, and it's the one that matters most. Each project carries a replication-difficulty read:
+
+- **Low** — one person can ship a weekend prototype
+- **Medium** — doable solo, but slower; expect weeks, not days
+- **High** — needs a resource moat: a team, funding, licensing, or proprietary supply
+
+Low difficulty is a double signal. It means the project is solo-friendly — but it also means the door is open to everyone who noticed. A low-difficulty lane tells you the opportunity is real and reachable; it says nothing about how long the window stays open.
+
+<DomainCard domain="seedream4.org" />
+
+`Seedream` sits in the same AI image-generation lane as the project above, but at **medium** difficulty — generation, editing, and enhancement under one roof. More surface area, more moving parts, harder for one person to match feature-for-feature. That extra weight is also its defensibility: a broader product is slower to replicate completely.
+
+The point of comparing the two isn't to pick a winner. It's to see the lane's shape — where the lean entrants sit, where the broader players sit, and which gap is still unfilled.
+
+## Read 3 — What the project does NOT need
+
+The most useful signal is often absence. A project that needs no marketplace (no two-sided supply), no regulated data, and no enterprise sales is, almost by definition, one a solo founder can carry. That same absence is also why it's easy to enter — which loops back to Read 2.
+
+<DomainCard domain="opencreator.io" />
+
+`OpenCreator` is a platform for digital creators' everyday content work, at **medium** difficulty. Note what it implies without stating it: a content tool for individual creators usually avoids the two-sided marketplace problem and leans on a single user type. That's the solo-friendly signature — and the reason a lane like this stays approachable even when it's busy.
+
+## Where this filter misleads you
+
+Three reads are a shortcut, not a verdict. Know the failure modes before you trust them:
+
+- **Crowded looks like validated, and sometimes it's just loud.** A lane full of similar projects can mean proven demand or a trend everyone piled into at once. Pair density with time — are these projects still moving, or did they all surface in the same window and go quiet?
+- **Low difficulty hides the clock.** If one person can rebuild the core in a weekend, so can a funded team with distribution. Low difficulty tells you the door is open; it doesn't tell you who else is walking through it.
+- **The filter only sees what shipped.** Projects living inside companies, in offline workflows, or in communities that never register a domain are invisible here. Strong signal for software, blind spot for everything else.
+
+Treat the map as the start of research, not the end of it.
+
+## Putting it into practice with GrowthRadar
+
+You can do the three reads by hand, but they're faster as a repeatable pass:
+
+1. Open a lane from the [homepage](/) — start with [AI tools](/category/ai_tool) or any niche that matches your idea.
+2. Scan the **replication difficulty** badge on each project — note where the low and medium tiers cluster.
+3. Open a project's detail page and read its **Solo Founder Angle** to see what it does and doesn't need.
+
+Thirty minutes a lane is enough. The pattern: list the projects, read each one's job and difficulty, and watch where the seams are.
+
+## FAQ
+
+### How do I research competitors without a paid tool?
+
+Start from the lane, not the tool. List the projects already in the space, then read each one's job (narrow or broad), its replication difficulty (low, medium, high), and what it doesn't need (marketplace, regulated data, enterprise sales). That trio tells you more about the opening than any dashboard.
+
+### How do I know if a lane is too crowded?
+
+Crowding is usually a demand signal, not a stop sign. A lane is "too crowded" only when every segment is served by a broad player with distribution you can't match. The findable opening is a seam the incumbents are too wide to serve — a narrower job, a specific audience, a channel they ignore.
+
+### What signals a weak moat?
+
+Low replication difficulty. If one person could rebuild the core in a weekend, the product has little structural defense — which is exactly why it's solo-friendly. Weak moat isn't a dealbreaker; it's a prompt to bring an angle competitors lack: an audience, a domain you know, a warm distribution channel.
+
+### How many competitors is too many?
+
+There's no count that decides it. Ten similar projects with no differentiation is worse than fifty where you can name the gap each one misses. Read the seam, not the tally — a busy lane with an obvious unfilled niche is more open than a quiet lane nobody has validated.
+
+### What if my idea is already taken?
+
+It almost always is, and that's usually good news — it means demand exists. Run the three reads on the project that "took" it: if it's low-difficulty and broad, there's room for a sharper version. If it's high-difficulty and well-funded, pick a seam it can't serve without bloating. Being late to a proven lane beats being early to a blank one.
+
+## Where to go next
+
+Back to the fear this started with: *is this already taken?* The honest answer is usually "yes, and that helps." Recent, crowded enough to prove demand, with a seam you can serve alone — that's the lane worth entering.
+
+Found your seam? The next move is sharpening the idea until it fits one person — revisit the [discovery playbook](/playbooks/find-what-to-build) and run its three passes on your own concept.

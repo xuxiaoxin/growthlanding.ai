@@ -13,7 +13,7 @@
  * are kept as lightweight `<a>` links hidden via the `hidden` CSS class
  * (display:none). This keeps the link graph intact without baking ~2MB of
  * hidden card markup into the page. So:
- *   - crawlers still see every /domain/ link in the HTML source
+ *   - crawlers still see every /opportunity/ link in the HTML source
  *   - React hydration matches (server + client render the same nodes)
  *   - search / category filter just toggles `hidden` + swaps in the full
  *     card when a row enters the visible window
@@ -23,6 +23,7 @@
 import { useMemo, useState } from "react";
 import type { DomainItem } from "@/types";
 import { titleCase } from "@/lib/format";
+import { trackCategoryClick } from "@/lib/track";
 import LeaderboardCard from "./LeaderboardCard";
 
 interface Props {
@@ -133,6 +134,7 @@ export default function Leaderboard({ items, total, hideCategoryChips = false }:
           <Chip
             active={activeCat === "all"}
             onClick={() => {
+              trackCategoryClick({ category: "all", source: "leaderboard_filter" });
               setActiveCat("all");
               resetPager();
             }}
@@ -144,6 +146,7 @@ export default function Leaderboard({ items, total, hideCategoryChips = false }:
               key={cat}
               active={activeCat === cat}
               onClick={() => {
+                trackCategoryClick({ category: cat, source: "leaderboard_filter" });
                 setActiveCat(cat);
                 resetPager();
               }}
@@ -176,7 +179,7 @@ export default function Leaderboard({ items, total, hideCategoryChips = false }:
               return (
                 <li key={item.domain} className="hidden">
                   <a
-                    href={`/domain/${encodeURIComponent(item.domain)}`}
+                    href={`/opportunity/${encodeURIComponent(item.domain)}`}
                     tabIndex={-1}
                     aria-hidden
                     className="sr-only"

@@ -120,7 +120,7 @@ export default async function CategoryPage({
     itemListElement: items.map((it, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      url: `${SITE_ORIGIN}/domain/${encodeURIComponent(it.domain)}`,
+      url: `${SITE_ORIGIN}/opportunity/${encodeURIComponent(it.domain)}`,
       name: it.domain,
     })),
   };

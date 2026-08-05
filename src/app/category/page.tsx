@@ -3,7 +3,7 @@
  *
  * Static (no generateStaticParams needed: this is a fixed single route).
  * Forms the middle layer of the 4-level internal link structure:
- *   Home → /category (this) → /category/[cat] → /domain/[domain]
+ *   Home → /category (this) → /category/[cat] → /opportunity/[domain]
  *
  * SEO:
  *  - canonical + meta description

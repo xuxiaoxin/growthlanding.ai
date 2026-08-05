@@ -9,7 +9,7 @@
  *   quality verdict rather than a heuristic opportunity number).
  * - Favicon falls back to a letter avatar on load error (Google's favicon
  *   service can return a blank/grey tile), and is lazy-loaded.
- * - Clicking the row navigates to the in-site detail page (/domain/<domain>).
+ * - Clicking the row navigates to the in-site detail page (/opportunity/<domain>).
  *
  * This is a Client Component only because favicon onError needs an event
  * handler; everything else is presentational.
@@ -56,7 +56,7 @@ export default function LeaderboardCard({ item, rank, index = 0 }: Props) {
 
   return (
     <Link
-      href={`/domain/${encodeURIComponent(item.domain)}`}
+      href={`/opportunity/${encodeURIComponent(item.domain)}`}
       className={`group animate-fade-in block bg-card border rounded-[14px] p-[14px_18px] transition-transform duration-[160ms] ease-out hover:-translate-y-0.5 hover:shadow-[0_14px_34px_-16px_rgba(24,24,27,0.28)] ${
         isTop3
           ? "border-l-[3px] border-l-accent border-y-border border-r-border hover:border-accent"

@@ -15,9 +15,10 @@ const inter = Inter({
 
 const SITE_ORIGIN = "https://growthlanding.ai";
 const SITE_NAME = "GrowthRadar";
-const DEFAULT_TITLE = "GrowthRadar — AI & SaaS Product Directory";
+const DEFAULT_TITLE =
+  "Newly Launched AI & SaaS Products — Solo Founder Opportunities";
 const DEFAULT_DESCRIPTION =
-  "A daily-updated leaderboard of newly launched, worth-studying SaaS and AI products discovered across the web — ranked by fit for solo founders.";
+  "Tracks newly launched SaaS and AI products, ranks the ones with early business signals and solo-founder-friendly paths — updated daily.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "GrowthRadar — AI & SaaS Product Directory",
+        alt: "GrowthRadar — Newly Launched AI & SaaS Products for Solo Founders",
       },
     ],
   },

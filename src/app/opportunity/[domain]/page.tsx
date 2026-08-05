@@ -18,6 +18,9 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Favicon from "@/components/Favicon";
 import SiteFooter from "@/components/SiteFooter";
+import DetailPageViewTracker from "@/components/DetailPageViewTracker";
+import OutboundLink from "@/components/OutboundLink";
+import CategoryLink from "@/components/CategoryLink";
 import type { DomainItem } from "@/types";
 import { getDetail, getFeaturedDomains, getFeaturedTotal, getRelatedByCategory, getCategories } from "@/lib/data-server";
 import {
@@ -27,13 +30,17 @@ import {
   relativeTime,
   titleCase,
   faviconUrl,
-  domainLetter,
   difficultyDotColor,
   difficultyLabel,
   scoreRingFill,
   scoreRingDash,
 } from "@/lib/format";
 import { categoryPlural } from "@/lib/categories";
+import {
+  buildDetailTitleBody,
+  buildDetailFullTitle,
+  buildDetailDescription,
+} from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -52,31 +59,35 @@ export async function generateMetadata({
   const { domain } = await params;
   const d = decodeURIComponent(domain);
   const detail = await getDetail(d);
-  const desc =
-    detail?.summary ??
-    `Opportunity analysis for ${d}: what it does and why it's worth studying.`;
   // Thin content (no description) → keep out of the index but still follow
   // links so internal link equity still flows. Tightened from the old
   // "!description && not alive" rule: an alive page with only a ~12-word
   // summary is still too thin to spend crawl budget on, regardless of status.
   const thin = !detail?.description;
-  const categorySuffix = detail?.category ? ` ${titleCase(detail.category)}` : "";
-  // Title here feeds layout.tsx's `title.template: "%s | GrowthRadar"`, so we
+  // Title body feeds layout.tsx's `title.template: "%s | GrowthRadar"`, so we
   // return only the body and let the template append the site name. (OG/Twitter
-  // don't use the template, so they get the full hand-written title.)
-  const titleBody = `${d}${categorySuffix}`;
-  const fullTitle = `${titleBody} — GrowthRadar`;
+  // don't use the template, so they get the full hand-written title.) The body
+  // is built by src/lib/seo.ts, which applies the target_users 3-layer fallback
+  // and truncates to the SERP length budget. See SPEC-001 Part A.
+  const titleBody = buildDetailTitleBody({
+    domain: d,
+    category: detail?.category,
+    targetUsers: detail?.target_users,
+    difficulty: detail?.replication_difficulty,
+  });
+  const fullTitle = buildDetailFullTitle(titleBody);
+  const desc = buildDetailDescription(detail?.summary, d);
   return {
     title: titleBody,
     description: desc,
-    alternates: { canonical: `/domain/${encodeURIComponent(d)}` },
+    alternates: { canonical: `/opportunity/${encodeURIComponent(d)}` },
     robots: thin
       ? { index: false, follow: true }
       : { index: true, follow: true },
     openGraph: {
       title: fullTitle,
       description: desc,
-      url: `${SITE_ORIGIN}/domain/${encodeURIComponent(d)}`,
+      url: `${SITE_ORIGIN}/opportunity/${encodeURIComponent(d)}`,
       siteName: "GrowthRadar",
       images: [{ url: "/og.png", width: 1200, height: 630 }],
     },
@@ -139,7 +150,7 @@ function DetailBody({
   const isThin = !detail.description;
 
   // Structured data: describe the product (SoftwareApplication) + breadcrumb.
-  const canonical = `${SITE_ORIGIN}/domain/${encodeURIComponent(domain)}`;
+  const canonical = `${SITE_ORIGIN}/opportunity/${encodeURIComponent(domain)}`;
   const softwareLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -199,6 +210,10 @@ function DetailBody({
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
+      {/* GA4 detail_page_view — fires once on mount. Placed at the top of the
+          DetailBody return so it's independent of any downstream restructuring
+          of the sections below. */}
+      <DetailPageViewTracker domain={domain} category={detail.category} subcategory={detail.subcategory} />
       {/* Visible breadcrumb — mirrors BreadcrumbList JSON-LD exactly so the
           on-page trail and the rich-result schema never disagree. The current
           domain is a plain (non-clickable) span; Home and Category are links. */}
@@ -216,12 +231,12 @@ function DetailBody({
             <>
               <li aria-hidden className="text-text-muted">›</li>
               <li>
-                <Link
-                  href={`/category/${encodeURIComponent(detail.category)}`}
+                <CategoryLink
+                  category={detail.category}
                   className="hover:text-text-primary transition-colors"
                 >
                   {categoryPlural(detail.category)}
-                </Link>
+                </CategoryLink>
               </li>
             </>
           )}
@@ -319,14 +334,14 @@ function DetailBody({
         </div>
 
         <div className="flex items-center gap-3 mt-5 pt-5 border-t border-border">
-          <a
+          <OutboundLink
             href={siteUrl(domain)}
-            target="_blank"
-            rel="noopener noreferrer"
+            domain={domain}
+            category={detail.category}
             className="flex-1 text-center px-4 py-2.5 rounded-[10px] bg-accent hover:bg-accent-ink text-white text-sm font-medium transition-colors"
           >
             Visit site ↗
-          </a>
+          </OutboundLink>
           <div className="text-xs text-text-muted text-right">
             <div>Discovered {formatDate(detail.first_seen)}</div>
             <div className="text-text-muted">{relativeTime(detail.first_seen)}</div>
@@ -364,16 +379,30 @@ function DetailBody({
         </Section>
       ) : (
         <>
-          {/* Description */}
-          <Section title="What it does">
+          {/* 2. Opportunity Summary — the long-form description gives the
+              reader the elevator pitch before the analytical sections. The
+              summary also appears in the Header card as a one-line subhead, so
+              we don't repeat it here. */}
+          <Section title="Opportunity Summary">
             <p className="text-text-secondary leading-relaxed max-w-3xl">
               {detail.description}
             </p>
           </Section>
 
-          {/* Key features */}
+          {/* 3. Solo Founder Angle — derived from why_interesting, reframed for
+              the solo-founder audience ("is this worth my time?"). */}
+          {detail.why_interesting && (
+            <Section title="Solo Founder Angle">
+              <p className="text-sm text-text-secondary leading-relaxed max-w-3xl">
+                {detail.why_interesting}
+              </p>
+            </Section>
+          )}
+
+          {/* 4. What to Study — derived from key_features; framed as the parts
+              worth studying rather than a feature list. */}
           {detail.key_features.length > 0 && (
-            <Section title="Core features">
+            <Section title="What to Study">
               <ul className="grid sm:grid-cols-2 gap-2">
                 {detail.key_features.map((f, i) => (
                   <li
@@ -388,19 +417,70 @@ function DetailBody({
             </Section>
           )}
 
-          {/* Target users + why interesting */}
-          <div className="grid sm:grid-cols-2 gap-4 mt-6">
-            {detail.target_users && (
-              <Section title="Who it's for">
-                <p className="text-sm text-text-secondary">{detail.target_users}</p>
+          {/* 5. Who it's for — derived from target_users. */}
+          {detail.target_users && (
+            <Section title="Who it's for">
+              <p className="text-sm text-text-secondary leading-relaxed max-w-3xl">
+                {detail.target_users}
+              </p>
+            </Section>
+          )}
+
+          {/* 6. Risks / Avoid If — text explanations of the risk signals that
+              already surface as badges in the Header. Built as a list of risk
+              factors derived from field values, so the section renders nothing
+              when there are no signals (it is conditionally mounted below).
+              Falls back to a positive "low-risk profile" note when all signals
+              are low/absent, so the reader always gets a take-away. */}
+          {(() => {
+            const risks: string[] = [];
+            if (detail.replication_difficulty === "high") {
+              risks.push(
+                "High replication difficulty — building this needs significant engineering or resources, which can be a real cost for a solo founder."
+              );
+            } else if (detail.replication_difficulty === "medium") {
+              risks.push(
+                "Moderate replication difficulty — expect non-trivial engineering effort to reach parity."
+              );
+            }
+            if (detail.competition_level === "high") {
+              risks.push(
+                "Crowded market — many direct competitors already compete for the same users, so differentiation is hard."
+              );
+            } else if (detail.competition_level === "medium") {
+              risks.push(
+                "Moderate competition — several players are already active in this space, so a clear angle matters."
+              );
+            }
+            if (detail.unique_data_dependency === true) {
+              risks.push(
+                "Unique data dependency — the product's advantage relies on data access that's hard to acquire from scratch."
+              );
+            }
+            const hasRisks = risks.length > 0;
+            return (
+              <Section title="Risks / Avoid If">
+                {hasRisks ? (
+                  <ul className="flex flex-col gap-2 max-w-3xl">
+                    {risks.map((r, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-2 text-sm text-text-secondary"
+                      >
+                        <span className="text-text-muted mt-0.5">•</span>
+                        <span>{r}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-text-secondary leading-relaxed max-w-3xl">
+                    Low-risk profile for a solo founder — small surface area and
+                    no hard-to-acquire dependencies.
+                  </p>
+                )}
               </Section>
-            )}
-            {detail.why_interesting && (
-              <Section title="Why it's worth studying">
-                <p className="text-sm text-text-secondary">{detail.why_interesting}</p>
-              </Section>
-            )}
-          </div>
+            );
+          })()}
         </>
       )}
 
@@ -503,7 +583,7 @@ function RelatedRail({
   return (
     <section className="mt-10">
       <h2 className="text-sm font-semibold text-text-primary mb-3 flex items-baseline gap-2">
-        {category ? `More ${categoryPlural(category)}` : "Related sites"}
+        {category ? `More ${categoryPlural(category)}` : "Related Opportunities"}
         <span className="text-xs font-normal text-text-muted">
           worth studying
         </span>
@@ -531,7 +611,7 @@ function RelatedCard({ item }: { item: DomainItem }) {
   const { dasharray, dashoffset } = scoreRingDash(fill, r);
   return (
     <Link
-      href={`/domain/${encodeURIComponent(item.domain)}`}
+      href={`/opportunity/${encodeURIComponent(item.domain)}`}
       className="group flex items-center gap-3 bg-card border border-border rounded-[12px] px-3 py-2.5 transition-colors hover:border-accent"
     >
       <div className="relative shrink-0 w-9 h-9 rounded-[10px] bg-stone-100 grid place-items-center overflow-hidden">

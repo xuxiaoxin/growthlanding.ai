@@ -34,7 +34,7 @@ export default async function HomePage() {
     itemListElement: featured.items.map((it, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      url: `${SITE_ORIGIN}/domain/${encodeURIComponent(it.domain)}`,
+      url: `${SITE_ORIGIN}/opportunity/${encodeURIComponent(it.domain)}`,
       name: it.domain,
     })),
   };
@@ -55,15 +55,14 @@ export default async function HomePage() {
               {featured.total.toLocaleString()} curated
             </span>
           )}
-          <h1 className="text-[34px] sm:text-[38px] leading-[1.12] tracking-[-0.035em] font-extrabold text-text-primary mt-[18px] max-w-[18ch]">
-            The radar for rising{" "}
-            <em className="not-italic text-accent-ink">SaaS &amp; AI</em>{" "}
-            products.
+          <h1 className="text-[34px] sm:text-[38px] leading-[1.12] tracking-[-0.035em] font-extrabold text-text-primary mt-[18px] max-w-[20ch]">
+            Find online business models already showing{" "}
+            <em className="not-italic text-accent-ink">early market signals</em>.
           </h1>
           <p className="text-text-secondary text-[15.5px] max-w-[580px] mt-3">
-            A daily-updated leaderboard of newly launched, worth-studying
-            products — ranked by fit for solo founders, with an analysis of
-            what makes each one worth copying.
+            GrowthRadar tracks newly launched SaaS and AI products, then ranks
+            the ones with early business signals and solo-founder-friendly
+            execution paths — updated daily.
           </p>
 
           <div className="mt-[34px]">
