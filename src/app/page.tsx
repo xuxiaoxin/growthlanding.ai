@@ -82,7 +82,7 @@ export default async function HomePage() {
                 per week.
               </p>
               <div className="mt-3">
-                <NewsletterSubscribe source="newsletter_hero" />
+                <NewsletterSubscribe source="newsletter_hero" compact />
               </div>
             </div>
           </div>
