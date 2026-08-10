@@ -27,6 +27,10 @@ yarn-error.log*
 .env*.local
 .env
 
+# secrets / credentials (NEVER commit — webui dual-pushes to a PUBLIC repo)
+# Neon-config.md contains the plaintext DB password/connection string.
+.spec/Neon-config.md
+
 # vercel
 .vercel
 

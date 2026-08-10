@@ -4,10 +4,12 @@
  * Written to match the actual codebase: Vercel Analytics (cookie-free) +
  * Google Analytics (cookie-based, gated by Consent Mode v2 with an EEA
  * consent banner) + Microsoft Clarity (cookie-based session replay, gated by
- * the same consent banner — not loaded at all until consent). No advertising,
- * no accounts, no form submissions. Keeping this accurate is required for
- * AdSense and for GDPR/CCPA good-faith compliance — over- or under-disclosing
- * both cause problems.
+ * the same consent banner — not loaded at all until consent). Plus a voluntary
+ * newsletter sign-up (email stored in Neon Postgres, synced to Resend for
+ * delivery). No advertising, no user accounts (Auth.js tables are reserved
+ * but not wired). Keeping this accurate is required for AdSense and for
+ * GDPR/CCPA good-faith compliance — over- or under-disclosing both cause
+ * problems.
  *
  * SEO: canonical + meta description + BreadcrumbList JSON-LD.
  */
@@ -20,7 +22,7 @@ import PageFooter from "@/components/PageFooter";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "GrowthRadar's privacy policy: Vercel analytics (cookie-free), Google Analytics, and Microsoft Clarity (both cookie-based, consent-gated in the EEA). No advertising, no cross-site tracking.",
+    "GrowthRadar's privacy policy: newsletter email stored in Neon Postgres and delivered via Resend. Vercel analytics (cookie-free), Google Analytics, and Microsoft Clarity (both cookie-based, consent-gated in the EEA). No advertising, no cross-site tracking.",
   alternates: { canonical: "/privacy" },
   robots: { index: true, follow: true },
   openGraph: {
@@ -34,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 const SITE_ORIGIN = "https://growthlanding.ai";
-const LAST_UPDATED = "July 30, 2026";
+const LAST_UPDATED = "August 10, 2026";
 
 export default function PrivacyPage() {
   const breadcrumbLd = {
@@ -78,15 +80,28 @@ export default function PrivacyPage() {
 
             <h2>1. Information we collect</h2>
             <p>
-              <strong>Almost none.</strong> The Site has no user accounts, no
-              contact forms, no newsletter sign-up, and no comment system. You
-              can browse every page without identifying yourself.
+              <strong>Very little, and only what you choose to give.</strong>{" "}
+              The Site has no user accounts and no comment system. You can
+              browse every page without identifying yourself. The only personal
+              data we collect is your <strong>email address</strong>, and only
+              if you voluntarily subscribe to the weekly digest via the sign-up
+              form in the footer or on a playbook page.
             </p>
-            <p>Specifically, we do <strong>not</strong> collect:</p>
+            <p>Specifically:</p>
             <ul>
-              <li>Your name, email, or any contact details.</li>
+              <li>
+                <strong>Email address</strong> — only when you submit the
+                newsletter form. Used solely to send the weekly digest. Stored
+                in our database (Neon Postgres, Section 2) and synced to our
+                email provider (Resend, Section 2) for delivery. You can
+                unsubscribe at any time via the link in every email.
+              </li>
+            </ul>
+            <p>We do <strong>not</strong> collect:</p>
+            <ul>
+              <li>Your name, physical address, or phone number.</li>
               <li>Account credentials — there are no accounts.</li>
-              <li>User-generated content — there is no way to submit content.</li>
+              <li>User-generated content — there is no comment system.</li>
               <li>Precise location or device fingerprints.</li>
             </ul>
             <p>
@@ -98,8 +113,9 @@ export default function PrivacyPage() {
 
             <h2>2. Third-party services</h2>
             <p>
-              The Site is intentionally lean. As of the last update, only three
-              third parties process any data in connection with your visit:
+              The Site is intentionally lean. As of the last update, the
+              following third parties process data in connection with your
+              visit:
             </p>
 
             <h3>Vercel (hosting infrastructure)</h3>
@@ -267,6 +283,43 @@ export default function PrivacyPage() {
               a font service when you visit.
             </p>
 
+            <h3>Neon Postgres (newsletter email storage)</h3>
+            <p>
+              When you subscribe to the weekly digest, your email address is
+              stored in our database hosted on{" "}
+              <strong>Neon Postgres</strong> (a managed PostgreSQL service).
+              The data stored is limited to: your email address, the submission
+              timestamp, the page you subscribed from, and a status field
+              (pending / subscribed / unsubscribed). Neon processes this data on
+              our behalf as a processor; we control the database and its
+              contents. See{" "}
+              <a
+                href="https://neon.com/security"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Neon&apos;s security &amp; privacy
+              </a>
+              .
+            </p>
+
+            <h3>Resend (email delivery)</h3>
+            <p>
+              To send the weekly digest, your email address is synced to our
+              email delivery provider, <strong>Resend</strong>. Resend receives
+              only your email address (no other personal data) and sends on our
+              behalf. Every email we send includes an unsubscribe link; using it
+              updates your status in both Neon and Resend. See{" "}
+              <a
+                href="https://resend.com/legal/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Resend&apos;s Privacy Policy
+              </a>
+              .
+            </p>
+
             <h2>3. Cookies and local storage</h2>
             <p>
               The Site uses three kinds of storage, and keeps them to a minimum:
@@ -342,15 +395,18 @@ export default function PrivacyPage() {
 
             <h2>6. Your rights</h2>
             <p>
-              Because we hold essentially no personal data about you, the
-              practical exercise of rights like access or deletion is simple:
-              there is nothing to access or delete. If you believe otherwise —
-              for example, if a listed domain is yours and you have a concern —
-              you can reach out through the project&apos;s public channel (the
-              repository or project page linked from the Site) and we will
-              respond promptly. Depending on where you live, you may also have
-              rights under GDPR (EU/UK), CCPA (California), or similar laws; we
-              will honor valid requests.
+              If you have subscribed to the weekly digest, you can{" "}
+              <strong>unsubscribe at any time</strong> using the link at the
+              bottom of every digest email. If you want your email address
+              fully deleted from our records, reply to any digest email (or
+              reach out through the project&apos;s public channel linked from
+              the Site) and we will remove it from both Neon and Resend.
+            </p>
+            <p>
+              Beyond the newsletter, we hold essentially no personal data about
+              you. Depending on where you live, you may have rights under GDPR
+              (EU/UK), CCPA (California), or similar laws — we will honor valid
+              requests to access, correct, or delete your data.
             </p>
 
             <h2>7. External links</h2>

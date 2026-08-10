@@ -12,6 +12,7 @@ import Header from "@/components/Header";
 import StatsBar from "@/components/StatsBar";
 import Leaderboard from "@/components/Leaderboard";
 import SiteFooter from "@/components/SiteFooter";
+import NewsletterSubscribe from "@/components/NewsletterSubscribe";
 import { getCategories, getFeatured, getStats } from "@/lib/data-server";
 import { relativeTime } from "@/lib/format";
 
@@ -46,7 +47,9 @@ export default async function HomePage() {
       </a>
       <Header />
       <main id="main" className="flex-1 pb-16">
-        {/* Hero — carries the H1 + core keywords (fixes "no H1 on home"). */}
+        {/* Hero — carries the H1 + core keywords (fixes "no H1 on home").
+            Desktop: title on the left, newsletter subscribe on the right.
+            Mobile (<lg): stacks vertically (title, then subscribe, then stats). */}
         <section className="mx-auto max-w-5xl px-4 pt-14">
           {stats?.generated_at && (
             <span className="inline-flex items-center gap-2 text-xs font-semibold text-accent-ink bg-accent-soft px-3 py-[5px] rounded-full">
@@ -55,15 +58,34 @@ export default async function HomePage() {
               {featured.total.toLocaleString()} curated
             </span>
           )}
-          <h1 className="text-[34px] sm:text-[38px] leading-[1.12] tracking-[-0.035em] font-extrabold text-text-primary mt-[18px] max-w-[20ch]">
-            Find online business models already showing{" "}
-            <em className="not-italic text-accent-ink">early market signals</em>.
-          </h1>
-          <p className="text-text-secondary text-[15.5px] max-w-[580px] mt-3">
-            GrowthRadar tracks newly launched SaaS and AI products, then ranks
-            the ones with early business signals and solo-founder-friendly
-            execution paths — updated daily.
-          </p>
+          <div className="mt-[18px] flex flex-col lg:flex-row lg:items-start lg:gap-10">
+            <div className="lg:flex-1 lg:min-w-0">
+              <h1 className="text-[34px] sm:text-[38px] leading-[1.12] tracking-[-0.035em] font-extrabold text-text-primary max-w-[20ch]">
+                Find online business models already showing{" "}
+                <em className="not-italic text-accent-ink">early market signals</em>.
+              </h1>
+              <p className="text-text-secondary text-[15.5px] max-w-[580px] mt-3">
+                GrowthRadar tracks newly launched SaaS and AI products, then ranks
+                the ones with early business signals and solo-founder-friendly
+                execution paths — updated daily.
+              </p>
+            </div>
+            {/* Newsletter subscribe — primary placement on the home hero.
+                The most visible entry point; footer copy was removed to
+                avoid duplication. */}
+            <div className="mt-6 lg:mt-1 lg:w-[340px] shrink-0 rounded-[14px] border border-border bg-card/60 p-5">
+              <p className="text-sm font-semibold text-text-primary">
+                Weekly digest, free
+              </p>
+              <p className="mt-1 text-[13px] leading-relaxed text-text-muted">
+                The best new SaaS &amp; AI launches worth studying — one email
+                per week.
+              </p>
+              <div className="mt-3">
+                <NewsletterSubscribe source="newsletter_hero" />
+              </div>
+            </div>
+          </div>
 
           <div className="mt-[34px]">
             <StatsBar stats={stats} />

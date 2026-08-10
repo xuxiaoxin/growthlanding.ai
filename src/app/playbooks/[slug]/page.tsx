@@ -17,6 +17,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import PageFooter from "@/components/PageFooter";
+import NewsletterSubscribe from "@/components/NewsletterSubscribe";
 import {
   getAllPlaybookSlugs,
   getAllPlaybooks,
@@ -132,6 +133,22 @@ export default async function PlaybookPage({
           <article className="prose-trust mt-6">
             <Content />
           </article>
+
+          {/* Newsletter lead-capture — placed right after the article body,
+              before the related rail. This is the highest-converting placement
+              (reader just consumed founder-targeted content). */}
+          <section className="mt-10 rounded-[14px] border border-border bg-card/50 p-5">
+            <h2 className="text-[15px] font-semibold text-text-primary">
+              Get the weekly digest
+            </h2>
+            <p className="mt-1 text-[13px] leading-relaxed text-text-muted">
+              Newly launched SaaS &amp; AI products worth studying — ranked for
+              solo-founder fit, delivered once a week.
+            </p>
+            <div className="mt-3">
+              <NewsletterSubscribe source="newsletter_playbook" />
+            </div>
+          </section>
 
           {related.length > 0 && (
             <section className="mt-12 pt-8 border-t border-border">

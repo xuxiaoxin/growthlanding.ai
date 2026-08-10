@@ -158,7 +158,14 @@ hits both; the public push triggers a Vercel rebuild.
 
 - **No AI/LLM mention in user-visible copy.** Describe the analysis with
   vague wording (e.g. "analysis", "identified"); never call out AI/LLM.
-- **No contact info anywhere** — no email, no contact form, nothing.
+- **No first-party contact info baked into static HTML** (no hardcoded email
+  address, no mailto:). Newsletter lead-capture IS allowed via the
+  `<NewsletterSubscribe>` client island, which POSTs to `/api/subscribe`
+  (writes Neon Postgres, syncs Resend). The form must be gated by the
+  privacy-page disclosure and fire `trackEmailSubmit` (source label only).
+  Never store emails in this repo or hardcode them in static output.
+  Auth.js login is NOT wired yet (tables reserved) — do not add middleware,
+  it would break SSG. See `.spec/Neon-config.md` (gitignored, secrets).
 - **zsh globbing gotcha:** `[domain]` and `[cat]` are glob patterns in zsh.
   Always quote these paths in shell/git commands (e.g.
   `git add 'src/app/domain/[domain]/page.tsx'`), or tab-completion/git will
