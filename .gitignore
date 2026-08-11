@@ -29,7 +29,9 @@ yarn-error.log*
 
 # secrets / credentials (NEVER commit — webui dual-pushes to a PUBLIC repo)
 # Neon-config.md contains the plaintext DB password/connection string.
+# resend-key.md contains the Resend API key.
 .spec/Neon-config.md
+.spec/resend-key.md
 
 # vercel
 .vercel

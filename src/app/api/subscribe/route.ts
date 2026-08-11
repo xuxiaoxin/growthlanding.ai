@@ -2,9 +2,14 @@
  * POST /api/subscribe — newsletter lead-capture endpoint.
  *
  * This is the ONLY dynamic endpoint in an otherwise 100%-SSG site. It stays
- * minimal on purpose: validate → insert into Neon (idempotent) → best-effort
- * sync to Resend. No session, no auth, no middleware — the SSG SEO pages
- * (~1090) are untouched.
+ * minimal on purpose: validate → insert into Neon (idempotent). No session,
+ * no auth, no middleware — the SSG SEO pages (~1090) are untouched.
+ *
+ * Neon is the single source of truth for subscribers. Resend is used ONLY as
+ * a delivery channel at send time: the digest script reads the subscribers
+ * table from Neon and sends via POST /emails. The restricted Resend API key
+ * (RESEND_API_KEY) can send but cannot manage Audiences, so we deliberately
+ * do NOT sync contacts here.
  *
  * Flow:
  *   1. Honeypot check — if the hidden `_gotcha` field is filled, silently
@@ -12,12 +17,10 @@
  *   2. Email validation — RFC-ish regex + length cap. Reject 400 on invalid.
  *   3. INSERT ... ON CONFLICT (email) DO NOTHING — repeat subscribes are
  *      idempotent, never error. Returns whether a new row was created.
- *   4. Resend sync — best-effort. If RESEND_API_KEY/AUDIENCE_ID are unset
- *      (e.g. during the approval-wait period) or the call fails, the
- *      subscription in Neon still succeeds. We log but don't block.
  *
  * Privacy / desensitization:
- *   - The email lives only in Neon + Resend (both disclosed in /privacy).
+ *   - The email lives only in Neon (disclosed in /privacy). Resend receives
+ *     each email only at send time, transiently.
  *   - GA4 tracking (trackEmailSubmit) is fired client-side with ONLY the
  *     `source` label — never the email address (see lib/track.ts red line).
  *   - Response body contains no PII: just { ok, confirmed }.
@@ -79,38 +82,11 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // --- best-effort Resend sync ---
-  // During the Resend-approval-wait window these env vars may be empty; the
-  // Neon row is the source of truth and we backfill Resend later. Never let a
-  // Resend failure fail the subscription.
-  const resendKey = process.env.RESEND_API_KEY;
-  const audienceId = process.env.RESEND_AUDIENCE_ID;
-  if (createdNew && resendKey && audienceId) {
-    try {
-      const resp = await fetch("https://api.resend.com/contacts", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${resendKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          audience_id: audienceId,
-          unsubscribed: false,
-        }),
-      });
-      // 200/201 = created; 422 = already exists (fine, idempotent). Others = log.
-      if (!resp.ok && resp.status !== 422) {
-        const text = await resp.text().catch(() => "");
-        console.error(
-          `[subscribe] Resend sync non-idempotent failure (${resp.status}):`,
-          text
-        );
-      }
-    } catch (err) {
-      console.error("[subscribe] Resend sync threw:", err);
-    }
-  }
+  // Neon is the single source of truth for subscribers. Resend is used ONLY
+  // as a delivery channel at send time (the restricted API key can send emails
+  // but cannot manage Audiences/contacts). So we do NOT sync to a Resend
+  // Audience here — the digest-sending script reads the subscribers table from
+  // Neon directly and calls POST /emails per recipient.
 
   return NextResponse.json({ ok: true, confirmed: createdNew });
 }
