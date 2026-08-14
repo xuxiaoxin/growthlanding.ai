@@ -30,8 +30,10 @@ yarn-error.log*
 # secrets / credentials (NEVER commit — webui dual-pushes to a PUBLIC repo)
 # Neon-config.md contains the plaintext DB password/connection string.
 # resend-key.md contains the Resend API key.
+# refs/ contains OAuth client secrets (GitHub + Google) downloaded from consoles.
 .spec/Neon-config.md
 .spec/resend-key.md
+.spec/refs/
 
 # vercel
 .vercel
@@ -45,3 +47,6 @@ next-env.d.ts
 
 # agent tooling state (not project code)
 .workbuddy/
+
+# runtime logs from local scripts (refresh-and-publish.sh etc.)
+scripts/*.log

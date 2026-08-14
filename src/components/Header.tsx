@@ -5,11 +5,16 @@
  *
  * The nav carries the Playbooks link as a main-content link (header links pass
  * significantly more internal-link equity + crawl priority than footer links,
- * which matters for /playbooks cold-start ranking signals). The tagline stays
- * on the right at the sm: breakpoint (mobile-hidden, matching the old layout).
+ * which matters for /playbooks cold-start ranking signals). The right side
+ * hosts <AccountMenu/>, a client island that probes login state via /api/me.
+ *
+ * SSG red line: this Header stays a pure Server Component — it must NOT call
+ * auth() or import @/auth. The account entry is isolated in <AccountMenu/>
+ * (a "use client" island), which does not affect this page's static output.
  */
 
 import Link from "next/link";
+import AccountMenu from "./AccountMenu";
 
 export default function Header() {
   return (
@@ -34,9 +39,7 @@ export default function Header() {
             </Link>
           </nav>
         </div>
-        <span className="text-xs text-text-muted hidden sm:block">
-          Solo-founder opportunities, discovered daily
-        </span>
+        <AccountMenu />
       </div>
     </header>
   );

@@ -30,18 +30,26 @@ import {
   isNew,
   domainLetter,
 } from "@/lib/format";
+import WatchlistButton from "./WatchlistButton";
 
 interface Props {
   item: DomainItem;
   rank: number;
   /** Stagger index for the fade-in animation (capped so long lists don't lag). */
   index?: number;
+  /** Presets the watch button state (e.g. the watchlist page passes true). */
+  initialWatched?: boolean;
 }
 
 const RING_R = 17; // ring radius — matches the SVG viewBox 0 0 44 44
 const RING_VIEWBOX = 44;
 
-export default function LeaderboardCard({ item, rank, index = 0 }: Props) {
+export default function LeaderboardCard({
+  item,
+  rank,
+  index = 0,
+  initialWatched = false,
+}: Props) {
   const difficulty = item.replication_difficulty;
   const isTop3 = rank <= 3;
   const showNew = isNew(item.first_seen);
@@ -127,8 +135,13 @@ export default function LeaderboardCard({ item, rank, index = 0 }: Props) {
           )}
         </div>
 
-        {/* Right column: difficulty dot + score ring + arrow */}
+        {/* Right column: watch toggle + difficulty dot + score ring + arrow */}
         <div className="shrink-0 flex items-center gap-4">
+          <WatchlistButton
+            domain={item.domain}
+            initialWatched={initialWatched}
+            compact
+          />
           {difficulty && (
             <span className="hidden sm:flex items-center gap-1.5 text-[11.5px] text-text-muted">
               <span

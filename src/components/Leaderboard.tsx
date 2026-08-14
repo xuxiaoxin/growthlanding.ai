@@ -20,10 +20,11 @@
  */
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { DomainItem } from "@/types";
 import { titleCase } from "@/lib/format";
 import { trackCategoryClick } from "@/lib/track";
+import { isWatchlistedBatch } from "@/app/actions/watchlist";
 import LeaderboardCard from "./LeaderboardCard";
 
 interface Props {
@@ -43,6 +44,30 @@ export default function Leaderboard({ items, total, hideCategoryChips = false }:
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  // Watched-domain set for the current user (signed-out → stays empty). Fetched
+  // once after hydration via a single batch server action so each card's button
+  // mounts with the correct initial state (otherwise toggling an already-watched
+  // domain would wrongly remove it). This is a client-side RPC; it never runs at
+  // build time, so the homepage stays fully SSG.
+  const [watchedSet, setWatchedSet] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    const domains = items.map((i) => i.domain);
+    if (domains.length === 0) return;
+    let cancelled = false;
+    isWatchlistedBatch(domains)
+      .then((watched) => {
+        if (!cancelled) setWatchedSet(new Set(watched));
+      })
+      .catch(() => {
+        /* signed-out or transient error → leave empty (buttons unwatched) */
+      });
+    return () => {
+      cancelled = true;
+    };
+    // `items` is a stable serialized reference handed down from the server
+    // parent, so this effect runs once per page mount.
+  }, [items]);
 
   // Category chips — from the actual data, sorted by frequency desc.
   // `other` is always pinned to the end (it's a catch-all bucket, not a real
@@ -195,6 +220,7 @@ export default function Leaderboard({ items, total, hideCategoryChips = false }:
                   item={item}
                   rank={rankInFiltered ?? i + 1}
                   index={(rankInFiltered ?? i + 1) - 1}
+                  initialWatched={watchedSet.has(item.domain)}
                 />
               </li>
             );

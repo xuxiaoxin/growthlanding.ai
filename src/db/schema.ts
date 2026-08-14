@@ -1,28 +1,34 @@
 /**
  * Drizzle schema — Neon Postgres.
  *
- * Two concerns live here:
- *   1. `subscribers` — the newsletter lead-capture table (active now).
- *   2. `users` / `accounts` / `sessions` — RESERVED for Auth.js (not wired in
- *      this phase). Defining the tables now means enabling login later is a
- *      code change, not a migration — zero DB downtime.
+ * Three concerns live here:
+ *   1. `subscribers` — the newsletter lead-capture table (active).
+ *   2. `users` / `accounts` / `sessions` — Auth.js account tables, mirroring the
+ *      @auth/drizzle-adapter standard schema (https://authjs.dev/getting-started/adapters/drizzle).
+ *      Wired with next-auth v5 (JWT session strategy). JS property names MUST
+ *      match what the adapter expects (e.g. accounts.refresh_token, not
+ *      refreshToken) — that is why property names are snake_case here while DB
+ *      column names are also snake_case. `sessions` is defined for completeness
+ *      but NOT written at runtime under JWT strategy.
+ *   3. `watchlist` — saved-site tracking for logged-in users.
  *
- * Why no Auth.js middleware yet: webui is ~1090 static pages (SSG) whose SEO
- * value depends on staying statically rendered. Auth.js middleware would force
- * matched routes to render per-request, degrading the SEO pages. Login is
- * deferred to the Track/watchlist phase, where only new /app/* routes need to
- * be dynamic — a precise middleware matcher then won't touch the SEO pages.
+ * Auth + SSG strategy: login uses next-auth v5 with JWT sessions and NO
+ * middleware/proxy (Next 16 renamed middleware → proxy, but the Auth.js proxy
+ * is optional). All auth checks live in RSC `auth()` calls inside /app/*
+ * dynamic routes; the ~1090 static SEO pages never import or call auth, so they
+ * stay SSG. See .spec/prd/002-accounts-and-watchlist.md.
  *
  * Tables are pushed to Neon via `drizzle-kit push` (see drizzle.config.ts).
  */
 
 import {
   pgTable,
-  serial,
-  varchar,
-  timestamp,
   text,
+  timestamp,
+  varchar,
   integer,
+  serial,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 // ---------------------------------------------------------------------------
@@ -49,42 +55,61 @@ export const subscribers = pgTable("subscribers", {
 });
 
 // ---------------------------------------------------------------------------
-// RESERVED for Auth.js — not wired this phase.
-// These mirror the @auth/drizzle-adapter schema so enabling login later is
-// a config change, not a migration.
-// See https://authjs.dev/getting-started/adapters/drizzle
+// Auth.js account tables — mirror the @auth/drizzle-adapter standard schema.
+// OAuth only (GitHub + Google), no Credentials provider → no password column.
+// No email magic link → no verificationTokens table needed.
 // ---------------------------------------------------------------------------
 
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
   email: text("email").notNull().unique(),
   emailVerified: timestamp("email_verified", { mode: "date" }),
   image: text("image"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const accounts = pgTable("accounts", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id")
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   type: text("type").notNull(),
   provider: text("provider").notNull(),
   providerAccountId: text("provider_account_id").notNull(),
-  refreshToken: text("refresh_token"),
-  accessToken: text("access_token"),
-  expiresAt: integer("expires_at"),
-  tokenType: text("token_type"),
+  refresh_token: text("refresh_token"),
+  access_token: text("access_token"),
+  expires_at: integer("expires_at"),
+  token_type: text("token_type"),
   scope: text("scope"),
-  idToken: text("id_token"),
+  id_token: text("id_token"),
+  session_state: text("session_state"),
 });
 
 export const sessions = pgTable("sessions", {
-  id: serial("id").primaryKey(),
-  sessionToken: text("session_token").notNull().unique(),
-  userId: integer("user_id")
+  sessionToken: text("session_token").primaryKey(),
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
+
+// ---------------------------------------------------------------------------
+// watchlist — saved sites for logged-in users.
+// Stores only (userId, domain); site details are read from the static
+// public/data JSON at render time (no duplication). The unique index on
+// (userId, domain) makes toggle operations idempotent. Cascades on user delete.
+// ---------------------------------------------------------------------------
+
+export const watchlist = pgTable(
+  "watchlist",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    domain: varchar("domain", { length: 255 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("watchlist_user_domain_idx").on(t.userId, t.domain)],
+);

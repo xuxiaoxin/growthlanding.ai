@@ -21,6 +21,7 @@ import SiteFooter from "@/components/SiteFooter";
 import DetailPageViewTracker from "@/components/DetailPageViewTracker";
 import OutboundLink from "@/components/OutboundLink";
 import CategoryLink from "@/components/CategoryLink";
+import WatchlistButton from "@/components/WatchlistButton";
 import type { DomainItem } from "@/types";
 import { getDetail, getFeaturedDomains, getFeaturedTotal, getRelatedByCategory, getCategories } from "@/lib/data-server";
 import {
@@ -333,16 +334,21 @@ function DetailBody({
           </div>
         </div>
 
-        <div className="flex items-center gap-3 mt-5 pt-5 border-t border-border">
+        <div className="flex flex-wrap items-center gap-3 mt-5 pt-5 border-t border-border">
           <OutboundLink
             href={siteUrl(domain)}
             domain={domain}
             category={detail.category}
-            className="flex-1 text-center px-4 py-2.5 rounded-[10px] bg-accent hover:bg-accent-ink text-white text-sm font-medium transition-colors"
+            className="flex-1 min-w-[140px] text-center px-4 py-2.5 rounded-[10px] bg-accent hover:bg-accent-ink text-white text-sm font-medium transition-colors"
           >
             Visit site ↗
           </OutboundLink>
-          <div className="text-xs text-text-muted text-right">
+          {/* Watch toggle — a Client island. This page is SSG and must NOT call
+              auth(), so the button is mounted with the default (unwatched)
+              state; it reconciles to the true state on click via the server
+              action (and via the optimistic UI). */}
+          <WatchlistButton domain={domain} />
+          <div className="text-xs text-text-muted text-right sm:ml-auto">
             <div>Discovered {formatDate(detail.first_seen)}</div>
             <div className="text-text-muted">{relativeTime(detail.first_seen)}</div>
           </div>

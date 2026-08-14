@@ -370,7 +370,7 @@ async function main() {
     }
     const sql = neon(dbUrl);
     const rows = await sql`SELECT email FROM subscribers WHERE status = 'subscribed' ORDER BY id`;
-    recipients = rows.map((r: { email: string }) => r.email);
+    recipients = rows.map((r) => r.email as string);
     if (recipients.length === 0) {
       console.error(
         "No subscribed recipients (all are 'pending'). Use --to you@email.com to send a test."
